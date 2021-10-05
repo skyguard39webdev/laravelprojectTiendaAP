@@ -1,0 +1,130 @@
+.bg-paleta-1{
+    background-color: #010135;
+}
+.bg-paleta-2{
+    background-color: #01528a;
+}
+.bg-paleta-3{
+    background-color: #0096d3;
+}
+.bg-paleta-4{
+    background-color: #eeebc2;
+}
+.bg-paleta-5{
+    background-color: #c7bfaa;
+}
+.text-paleta-1{
+    color: #010135;
+}
+.text-paleta-2{
+    color: #01528a;
+}
+.text-paleta-3{
+    color: #0096d3;
+}
+.text-paleta-4{
+    color: #eeebc2;
+}
+.text-paleta-5{
+    color: #c7bfaa;
+}
+
+.link-lateral {
+    color: black;
+    text-decoration: none;
+}
+/* asi no scrollea horizontalmente */
+/* html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+} */
+/* .container-fluid{
+    overflow-x: hidden;
+    } */
+
+
+.cardhover {
+    background-color: #f2f3f6;
+}
+.cardhover:hover {
+    background-color: white;
+    box-shadow: 0 0 6px rgb(0, 0, 0);
+    /* hay que ajustar los valores */
+
+}
+
+/* custom dropdown source https://blog.hubspot.com/website/html-dropdown */
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+/* .dropdown-content {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  overflow-y: auto;
+  width: 250px;
+  overflow-y: auto;
+  box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
+} */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 300px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+  }
+.dropdown:hover .dropdown-content {
+  display: block;
+  
+}
+.dropdown-content a {
+  display: block;
+  color: #000000;
+  
+  padding: 5px;
+  text-decoration: none;
+}
+.dropdown-content a:hover {
+  color: #FFFFFF;
+  
+  background-color: #00A4BD;
+}
+
+.no-click {
+    pointer-events: none;
+}
+
+/* .container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+} */
+
+html body.bg-light div.min-h-screen.bg-gray-100 main div.d-flex div.col-12 div.row {
+        --bs-gutter-x: 0;
+}
+
+/* #scrollbar1 { 
+    clear: both; 
+    margin: 20px 0 10px;
+    height: 400px;
+    overflow-y: auto;
+  } */
+
+html body.bg-light div.min-h-screen.bg-gray-100 main div.d-flex div.col-12 div.row div.container-fluid div.row div.col-sm-6.col-md-4.col-lg-3.pb-3.pt-2 a.link-dark {
+    text-decoration: none;
+}
+
+.disabledifempty {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+a.link-dark {
+    text-decoration: none;
+}
