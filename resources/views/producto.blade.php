@@ -19,7 +19,7 @@
                     @else
                     <a href="/detalle/{{ $a->id }}" class="link-dark">
                     @endif
-                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 420px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
                             @php
                                 $modelo = '';
                                 foreach ($imgModelos as $imgm)
@@ -96,7 +96,7 @@
                     @else
                     <a href="/detalle/{{ $act->id }}" class="link-dark">
                     @endif
-                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 420px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
                             @php
                                 $modelo = '';
                                 foreach ($imgModelos as $imgm)
@@ -179,7 +179,7 @@
                     @else
                     <a id="a3" href="/detalle/{{ $p->id }}" class="link-dark">
                     @endif
-                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center text-dark" style="width: 210px; height: 420px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center text-dark" style="width: 210px; height: 470px;">
                             @php
                                 $modelo = '';
                                 foreach ($imgModelos as $imgm)

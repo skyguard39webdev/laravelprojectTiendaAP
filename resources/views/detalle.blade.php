@@ -156,7 +156,7 @@
                     @else
                     <a href="/detalle/{{ $r->id }}" class="link-dark">
                     @endif
-                        <div class="card cardhover position-relative top-50 start-50 translate-middle" style="width: 210px; height: 420px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle" style="width: 210px; height: 470px;">
                             @php
                                 $modelo = '';
                                 foreach ($imgModelos as $imgm)
