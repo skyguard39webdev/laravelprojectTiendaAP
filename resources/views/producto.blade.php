@@ -11,6 +11,7 @@
                     </span>
                 </div>
             </div>
+            {{-- random comment --}}
             @foreach ($agregados as $a)
                 <div class="col-sm-6 col-md-4 col-lg-3 pb-3 pt-2">
                     @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$a->id]))
