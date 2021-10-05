@@ -116,7 +116,7 @@ class CarroController extends Controller
 
         $para_nombre = $usuario->name;
 
-        $para_correo = 'skyguard39@gmail.com'; // cambiar a correo personal de andres pbandres2019@gmail.com
+        $para_correo = 'pbandres2019@gmail.com'; // cambiar a correo personal de andres pbandres2019@gmail.com
 
 
         if(Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4){
