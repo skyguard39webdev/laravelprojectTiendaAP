@@ -35,7 +35,7 @@
                                             <p class="text-decoration-none">
                                                 @if (Route::has('login'))
                                                     @isset (Auth::user()->rol_id)
-                                                        @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4 && isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$act->id]))
+                                                        @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4 && isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id]))
                                                             @if(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id] > 1)
                                                                 @php
                                                                     $minimo = 1000000000000;

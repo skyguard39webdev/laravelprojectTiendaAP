@@ -228,7 +228,7 @@ class ProductoController extends Controller
             // ->orWhere('modelo', 'like', "%{$request->termino}%")
             ->paginate(50);
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
 
         return view('buscar', compact('producto', 'imgModelos'));
     }

@@ -32,6 +32,9 @@
                                         @else
                                             <h4>Precio: <strong class="text-danger">USD {{ $main_producto[0]->precio }} </strong></h4>
                                         @endif
+                                        @if ($producto[0]->precio != null)
+                                            <h6 class="text-danger">(No incluye IVA)</h6>
+                                        @endif
                                         <div class="d-flex">
                                             @if($main_producto[0]->precio == 0)
                                                 <br>
@@ -98,7 +101,10 @@
                                         @if($producto[0]->precio == 0)
                                             <h4><strong class="text-danger">AGOTADO</strong></h4>
                                         @else
-                                            <h4>Precio: <strong class="text-danger">USD {{ $producto[0]->precio }} </strong></h4> <h6 class="text-danger">(No incluye IVA)</h6>
+                                            <h4>Precio: <strong class="text-danger">USD {{ $producto[0]->precio }} </strong></h4>
+                                        @endif
+                                        @if ($producto[0]->precio != null)
+                                            <h6 class="text-danger">(No incluye IVA)</h6>
                                         @endif
                                         <div class="d-flex">
                                             @if($producto[0]->precio == 0)
