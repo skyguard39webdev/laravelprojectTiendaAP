@@ -27,16 +27,16 @@
                             @auth
                                 @isset(Auth::user()->rol_id)
                                     @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4)
-                                        @if($main_producto[0]->precio == 0)
+                                        @if($main_producto[0]->precio <= 0)
                                             <h4><strong class="text-danger">AGOTADO</strong></h4>
                                         @else
                                             <h4>Precio: <strong class="text-danger">USD {{ $main_producto[0]->precio }} </strong></h4>
                                         @endif
-                                        @if ($producto[0]->precio != null)
+                                        @if ($main_producto[0]->precio > 0)
                                             <h6 class="text-danger">(No incluye IVA)</h6>
                                         @endif
                                         <div class="d-flex">
-                                            @if($main_producto[0]->precio == 0)
+                                            @if($main_producto[0]->precio <= 0)
                                                 <br>
                                             @else
                                                 <input type="number" name="qty" value="1" />
@@ -98,16 +98,16 @@
                             @auth
                                 @isset(Auth::user()->rol_id)
                                     @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4)
-                                        @if($producto[0]->precio == 0)
+                                        @if($producto[0]->precio <= 0)
                                             <h4><strong class="text-danger">AGOTADO</strong></h4>
                                         @else
                                             <h4>Precio: <strong class="text-danger">USD {{ $producto[0]->precio }} </strong></h4>
                                         @endif
-                                        @if ($producto[0]->precio != null)
+                                        @if ($producto[0]->precio > 0)
                                             <h6 class="text-danger">(No incluye IVA)</h6>
                                         @endif
                                         <div class="d-flex">
-                                            @if($producto[0]->precio == 0)
+                                            @if($producto[0]->precio <= 0)
                                                 <br>
                                             @else
                                                 <input type="number" name="qty" value="1" />

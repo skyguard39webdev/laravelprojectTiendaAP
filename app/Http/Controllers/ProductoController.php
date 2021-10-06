@@ -97,7 +97,7 @@ class ProductoController extends Controller
                 ->get();
         }
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
 
         return view('detalle', compact('producto', 'recomendados', 'imgModelos'));
     }
