@@ -42,7 +42,7 @@
                                                                         $minimo = 1000000000000;
                                                                         foreach ($imgModelos as $imgm)
                                                                             if($p->titulo == $imgm->sobremodelo->titulo) {
-                                                                                if($minimo > $imgm->precio && $imgm->precio != 0) {
+                                                                                if($minimo > $imgm->precio && $imgm->precio != 0 && $imgm->oculto == 0) {
                                                                                     $minimo = $imgm->precio;
                                                                                 }else {
                                                                                     $minimo = $minimo;
@@ -57,10 +57,22 @@
                                                                         echo $min;
                                                                     @endphp
                                                                 @else
-                                                                    <strong class="text-danger">USD {{ $p->producto->precio }}</strong></h4>
+                                                                    @php
+                                                                        $minimo = 1000000000000;
+                                                                        foreach ($imgModelos as $imgm)
+                                                                            if($p->titulo == $imgm->sobremodelo->titulo ) {
+                                                                                if($minimo > $imgm->precio && $imgm->precio != 0 && $imgm->oculto == 0) {
+                                                                                    $minimo = $imgm->precio;
+                                                                                }else {
+                                                                                    $minimo = $minimo;
+                                                                                }
+                                                                            }
+                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                        echo $min;
+                                                                    @endphp
                                                                 @endif
                                                             @else
-                                                                Agregar productos
+                                                                Agregar productos - Enlace deshabilitado temporalmente
                                                             @endif
                                                         @endisset
                                                     @endif
@@ -70,10 +82,12 @@
                                                     <p class="text-decoration-none">
                                                         Varios modelos
                                                     </p>
-                                                @else
+                                                {{-- @elseif (array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id] == 1)
                                                     <p class="text-decoration-none">
                                                         Ver detalle
-                                                    </p>
+                                                    </p> --}}
+                                                @else 
+                                                    <p class="text-decoration-none"> Ver detalle</p>
                                                 @endif
                                             @endauth
                                         @endif

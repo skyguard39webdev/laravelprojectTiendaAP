@@ -19,6 +19,7 @@ class CreateProductosTable extends Migration
             $table->string('modelo');
             $table->string('titulo');
             $table->integer('precio');
+            $table->integer('oculto');
             $table->string('peso')->nullable();
             $table->integer('tramos')->nullable();
             $table->integer('tramos_mts')->nullable();

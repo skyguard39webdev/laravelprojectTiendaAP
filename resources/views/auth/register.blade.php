@@ -1,3 +1,7 @@
+<head>
+    {{-- para recaptcha --}}
+    {!! ReCaptcha::htmlScriptTagJsApi() !!}
+</head>
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
@@ -69,8 +73,8 @@
             </div>
 
             {{-- recaptcha --}}
-            <div class="form-group row">
-                <label class="col-md-4 col-form-label text-md-right">Laravel Google Recaptcha</label>
+            <div class="mt-4">
+                <x-label for="password_confirmation" :value="__('Confirmar la validación (*)')" />
                 <div class="col-md-6"> {!! htmlFormSnippet() !!} </div>
             </div>
 

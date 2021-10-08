@@ -24,14 +24,16 @@ class SobremodeloController extends Controller
 
         // esta funcion agarra los diferentes valores en sobremodelo
         // es importante decirle al select que hay que traer de modelo porque sino no trae nada mas que lo solicitado en el select
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
+        // $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
+
 
         // dd(array_column($imgModelos->all(), 'sobremodelo_id'));
         // dd(array_count_values(array_column($producto->producto->all(), 'sobremodelo_id')));
         // dd(Request::all()[0]);
-
+        // dd($imgModelos->all()[0]->oculto);
         // dd($imgModelos->all()[0]->sobremodelo->titulo);
-        // dd($imgModelos->all()[0]->modelo);
+        // dd(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[2]);
         // dd( array_column($producto->all()[0]->producto->get()->all(), 'precio') );
 
         return view('producto', compact('producto', 'agregados', 'actualizados', 'imgModelos'));
@@ -46,6 +48,7 @@ class SobremodeloController extends Controller
     {
         $sobremodelo = new Sobremodelo;
         $sobremodelo->titulo = $request->titulo;
+        $sobremodelo->oculto = 0;
         $checksave = $sobremodelo->save();
         
         // chequea si la base de datos realmente salva o no

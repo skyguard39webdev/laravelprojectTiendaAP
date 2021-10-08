@@ -14,6 +14,7 @@ class Producto extends Model
         'modelo',
         'titulo',
         'precio',
+        'oculto',
         'peso',
         'tramos',
         'tramos_mts',

@@ -74,6 +74,9 @@
                             @yield('nuevosobremod')
                             @yield('elimProd')
                             @yield('elimSobremodelo')
+                            @yield('omsobremodelo')
+                            @yield('omproductos')
+                            @yield('editarpreciosproductos')
                         </div>
                     </div>
                 </div>

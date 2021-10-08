@@ -9,40 +9,10 @@ use App\Models\Subcategoria;
 use App\Models\Producto;
 use App\Models\Carro;
 use App\Models\Sobremodelo;
+use Illuminate\Support\Facades\Auth;
 
 class ProductoController extends Controller
 {
-    public function index()
-    {
-        // $subcategorias = Subcategoria::get()->all();
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        $producto = Producto::query()->paginate(12);
-
-        $agregados = Producto::latest()->limit(4)->get();
-
-        $actualizados = Producto::orderBy('updated_at', 'desc')->limit(4)->get();
-        
-
-        return view('producto', compact('producto', 'agregados', 'actualizados'));
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-        // DEPRECATED POR AHORA NO SE USA
-
-    }
-
     public function cat($cat)
     {
         // ESTO AL PARECER RECOJE LOS PRODUCTOS DE LA CATEGORIA CORRECTA SIN REPETIRSE
@@ -54,35 +24,17 @@ class ProductoController extends Controller
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
             ->paginate(12);
             
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')
-            ->where('subcategoria_id', $cat)
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')
+            ->where('subcategoria_id', $cat)->where('oculto', 0)
             ->distinct()
             ->get();
-
-
-        // dd($producto->all());
-        // dd($producto[0]);
 
         return view('productos.cat', compact('producto', 'imgModelos'));
     }
 
-    // public function precioMayor($cat)
-    // {
-    //     $producto = Producto::where('subcategoria_id', $cat)->orderBy('precio', 'desc')->paginate(12);
-
-    //     return view('productos.cat', compact('producto'));
-    // }
-
-    // public function precioMenor($cat)
-    // {
-    //     $producto = Producto::where('subcategoria_id', $cat)->orderBy('precio', 'asc')->paginate(12);
-
-    //     return view('productos.cat', compact('producto'));
-    // }
-
-    public function idProd($id)
+    public function idProd($id) //detalle
     {
-        $producto = Producto::where('sobremodelo_id', $id)->get();
+        $producto = Producto::where('sobremodelo_id', $id)->where('oculto', 0)->get();
         
         $relacionado = explode(' ', $producto[0]->titulo, -1);
 
@@ -97,7 +49,7 @@ class ProductoController extends Controller
                 ->get();
         }
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('detalle', compact('producto', 'recomendados', 'imgModelos'));
     }
@@ -121,7 +73,7 @@ class ProductoController extends Controller
                 ->get();
         }
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto'));
     }
@@ -140,6 +92,7 @@ class ProductoController extends Controller
         $producto->modelo = $request->modelo;
         $producto->titulo = $request->titulo;
         $producto->precio = $request->precio;
+        $producto->oculto = 0;
         if($request->precio == null) {
             return back()->with('nullPrecio', 'No ha ingresado un Precio.');
         }elseif (!is_numeric($request->precio)){
@@ -214,21 +167,20 @@ class ProductoController extends Controller
     {
         $producto = Sobremodelo::query()->paginate(12);
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('buscar', compact('producto', 'imgModelos'));
     }
                     //scope es para poder utilizar el query mas adelante de forma mas rapida citando el nombre de la funcion
     public function scopeBuscarProducto(Request $request)
     {
-        // dd($request->termino);
         $producto = Sobremodelo::where('titulo', 'like', "%{$request->termino}%")
             // ->orWhere('descripcion', 'like', "%{$request->termino}%")
             // ->orWhere('marca', 'like', "%{$request->termino}%")
             // ->orWhere('modelo', 'like', "%{$request->termino}%")
             ->paginate(50);
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio')->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('buscar', compact('producto', 'imgModelos'));
     }
@@ -250,6 +202,135 @@ class ProductoController extends Controller
         Producto::where('id', $request->id)->delete();
 
         return redirect('/');
+    }
+
+    public function estadoProductoSelect(Request $request)
+    {
+        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function estadoUpdate(Request $request)
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $producto = Producto::findOrFail($rid);
+            $producto->oculto = $request->all()['estado'][$index];
+            $checksave = $producto->save();
+            $index++;
+            
+        }
+        if ($checksave) {
+            return redirect('/lista-productos')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
+    public function showListaProductos()
+    {
+        $listaProductos = Producto::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function buscarListaProductos(Request $request)
+    {
+        $listaProductos = Producto::where('titulo', 'like', "%{$request->termino}%")
+            // ->orWhere('descripcion', 'like', "%{$request->termino}%")
+            // ->orWhere('marca', 'like', "%{$request->termino}%")
+            ->orWhere('modelo', 'like', "%{$request->termino}%")
+            ->paginate(1000);
+            
+        $usuarioLoggeado = Auth::user();
+        
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function showListaProductosPrecio()
+    {
+        $listaProductos = Producto::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('editarprecios-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function buscarListaProductosPrecios(Request $request)
+    {
+        $listaProductos = Producto::where('titulo', 'like', "%{$request->termino}%")
+            // ->orWhere('descripcion', 'like', "%{$request->termino}%")
+            // ->orWhere('marca', 'like', "%{$request->termino}%")
+            ->orWhere('modelo', 'like', "%{$request->termino}%")
+            ->paginate(1000);
+            
+        $usuarioLoggeado = Auth::user();
+        
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('editarprecios-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function precioUpdate(Request $request)
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $producto = Producto::findOrFail($rid);
+            $producto->precio = $request->all()['precio'][$index];
+            $checksave = $producto->save();
+            $index++;
+            
+        }
+        if ($checksave) {
+            return redirect('/lista-productos-precio')->with('exitoUpdatePrecio', 'Los precios han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
+    public function estadoPrecioSelect(Request $request)
+    {
+        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('editarprecios-productos', compact('listaProductos'));
+            // return redirect('/lista-sobremodelos', compact('listaSobremodelos'));
+        }
+        else {
+            return redirect('/');
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('upriv')
+@section('omsobremodelo')
 @if (Route::has('login'))
     @isset (Auth::user()->rol_id)
         @if(Auth::user()->rol_id == 4)

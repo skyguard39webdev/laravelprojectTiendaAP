@@ -59,6 +59,8 @@
                                             <li class="mt-4" ><a href="/nuevo-sobremodelo" class="link-lateral">Ingresar Sobremodelo</a></li>
                                             <li class="mt-4" ><a href="/eliminarSobremodelo" class="link-lateral">Eliminar Sobremodelo</a></li>
                                             <li class="mt-4" ><a href="/lista-sobremodelos" class="link-lateral">Mostrar/Ocultar Sobremodelos</a></li>
+                                            <li class="mt-4" ><a href="/lista-productos" class="link-lateral">Mostrar/Ocultar Productos</a></li>
+                                            <li class="mt-4" ><a href="/lista-productos-precio" class="link-lateral">Editar Precios de Productos</a></li>
                                         </ul>
                                     </div>
                                 </div>
