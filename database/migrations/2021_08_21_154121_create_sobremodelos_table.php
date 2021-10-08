@@ -16,6 +16,7 @@ class CreateSobremodelosTable extends Migration
         Schema::create('sobremodelos', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
+            $table->integer('oculto');
             $table->timestamps();
         });
     }

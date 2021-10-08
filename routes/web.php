@@ -31,6 +31,9 @@ Route::get('/resultado', [App\Http\Controllers\ProductoController::class, 'scope
 //Sobremodelo
 Route::get('/nuevo-sobremodelo', [App\Http\Controllers\SobremodeloController::class, 'nuevoSobremodelo'])->middleware(['auth'])->name('nuevoSobremodelo');
 Route::post('/ingresarsobremodelo', [App\Http\Controllers\SobremodeloController::class, 'ingresarSobremodelo'])->middleware(['auth'])->name('ingresarSobremodelo');
+Route::get('/lista-sobremodelos-estado', [App\Http\Controllers\SobremodeloController::class, 'estadoSelect'])->middleware(['auth'])->name('estadoSobremodeloSelect');
+Route::post('/updateEstado', [App\Http\Controllers\SobremodeloController::class, 'estadoUpdate'])->middleware(['auth'])->name('estadoUpdate');
+Route::get('/lista-sobremodelos', [App\Http\Controllers\SobremodeloController::class, 'showListaSobremodelos'])->middleware(['auth'])->name('showListaSobremodelos');
 
 // CRUD Categorias //
 Route::post('/ingresarcategoria', [App\Http\Controllers\CategoriaController::class, 'ingresarCat'])->middleware(['auth'])->name('ingresarCat');

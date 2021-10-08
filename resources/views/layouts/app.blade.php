@@ -34,6 +34,9 @@
         <script src="https://kit.fontawesome.com/d5fbf70475.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         {{-- <script src="{{ asset('js/customjs.js') }}" defer></script> --}}
+
+        {{-- para recaptcha --}}
+        {!! ReCaptcha::htmlScriptTagJsApi() !!}
     </head>
     <body class="bg-light">
         <div class="min-h-screen bg-gray-100" style="background-image: url('{{ asset('img/fondo_grande.jpg') }}');">

@@ -68,6 +68,12 @@
                                 name="password_confirmation" required />
             </div>
 
+            {{-- recaptcha --}}
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label text-md-right">Laravel Google Recaptcha</label>
+                <div class="col-md-6"> {!! htmlFormSnippet() !!} </div>
+            </div>
+
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                     {{ __('¿Ya tiene cuenta?') }}

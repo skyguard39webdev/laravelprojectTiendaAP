@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sobremodelo;
 use App\Models\Producto;
+use Illuminate\Support\Facades\Auth;
 // use Request;
 
 class SobremodeloController extends Controller
 {
     public function index()
     {
+
+        // dd(Sobremodelo::select('oculto')->get()->all()[0]->oculto);
         // $subcategorias = Subcategoria::get()->all();
 
         $producto = Sobremodelo::query()->paginate(12);
@@ -68,5 +71,52 @@ class SobremodeloController extends Controller
         $sobremodelos = Sobremodelo::query()->get();
 
         return view('eliminarsobremodelo', compact('sobremodelos'));
+    }
+
+    public function estadoSelect(Request $request)
+    {
+        $listaSobremodelos = Sobremodelo::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-sobremodelos', compact('listaSobremodelos'));
+            // return redirect('/lista-sobremodelos', compact('listaSobremodelos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function estadoUpdate(Request $request)
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $sobremodelo = Sobremodelo::findOrFail($rid);
+            $sobremodelo->oculto = $request->all()['estado'][$index];
+            $checksave = $sobremodelo->save();
+            $index++;
+            
+        }
+        if ($checksave) {
+            return redirect('/lista-sobremodelos')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
+    public function showListaSobremodelos()
+    {
+        $listaSobremodelos = Sobremodelo::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-sobremodelos', compact('listaSobremodelos'));
+        }
+        else {
+            return redirect('/');
+        }
     }
 }
