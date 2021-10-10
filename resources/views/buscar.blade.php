@@ -14,12 +14,12 @@
             @foreach ($producto as $p)
                 @if($p->oculto != 1)
                     <div class="col-sm-6 col-md-4 col-lg-3 pb-3 pt-2">
-                        @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id]))
-                        <a href="/detalle/{{ $p->id }}" class="link-dark disabledifempty">
-                        @else
-                        <a href="/detalle/{{ $p->id }}" class="link-dark">
-                        @endif
-                            <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                            @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id]))
+                            <a href="/detalle/{{ $p->id }}" class="link-dark disabledifempty">
+                            @else
+                            <a href="/detalle/{{ $p->id }}" class="link-dark">
+                            @endif
                                 @php
                                     $modelo = '';
                                     foreach ($imgModelos as $imgm)

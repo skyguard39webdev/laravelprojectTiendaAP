@@ -60,10 +60,10 @@
                     </div>
                 </div>
             </div>
-            <form method="POST" action="{{ route('estadoUpdate') }}">
+            <form method="POST" action="{{ route('estadoUpdateProducto') }}">
                 @csrf
                 <div class="container">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -77,14 +77,14 @@
                         @foreach ($listaProductos as $lp)
                             <tbody>
                                 <tr>
-                                    <td scope="row"> {{ $lp->id }} </td>
+                                    <th scope="row"> {{ $lp->id }} </td>
                                     <td> {{ $lp->titulo }} </td>
                                     <td> {{ $lp->modelo }} </td>
                                     <td> {{ $lp->precio }} </td>
                                     @if ($lp->oculto == 0)
-                                    <td> Activo </td>
+                                    <td class="text-success"><strong> Activo </strong></td>
                                     @else
-                                    <td> Oculto </td>
+                                    <td class="text-danger"><strong> Oculto </strong></td>
                                     @endif
                                     <td>
                                         <input type="hidden" name="id[]" value="{{ $lp->id }}">

@@ -15,12 +15,13 @@
             @foreach ($agregados as $a)
                 @if($a->oculto != 1)
                     <div class="col-sm-6 col-md-4 col-lg-3 pb-3 pt-2">
-                        @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$a->id]))
-                        <a href="/detalle/{{ $a->id }}" class="link-dark disabledifempty">
-                        @else
-                        <a href="/detalle/{{ $a->id }}" class="link-dark">
-                        @endif
-                            <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                        {{-- postition-relative no hace nada si lo borro --}}
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                            @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$a->id]))
+                            <a href="/detalle/{{ $a->id }}" class="link-dark disabledifempty">
+                            @else
+                            <a href="/detalle/{{ $a->id }}" class="link-dark">
+                            @endif
                                 @php
                                     $modelo = '';
                                     foreach ($imgModelos as $imgm)
@@ -108,12 +109,12 @@
             @foreach ($actualizados as $act)
                 @if($act->oculto != 1)
                     <div class="col-sm-6 col-md-4 col-lg-3 pb-3 pt-2">
-                        @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$act->id]))
-                        <a href="/detalle/{{ $act->id }}" class="link-dark disabledifempty">
-                        @else
-                        <a href="/detalle/{{ $act->id }}" class="link-dark">
-                        @endif
-                            <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center" style="width: 210px; height: 470px;">
+                            @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$act->id]))
+                            <a href="/detalle/{{ $act->id }}" class="link-dark disabledifempty">
+                            @else
+                            <a href="/detalle/{{ $act->id }}" class="link-dark">
+                            @endif
                                 @php
                                     $modelo = '';
                                     foreach ($imgModelos as $imgm)
@@ -207,12 +208,12 @@
             @foreach ($producto as $p)
                 @if($p->oculto != 1)
                     <div class="col-sm-6 col-md-4 col-lg-3 pb-3 pt-2">
-                        @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id]))
-                        <a id="a3" href="/detalle/{{ $p->id }}" class="link-dark disabledifempty">
-                        @else
-                        <a id="a3" href="/detalle/{{ $p->id }}" class="link-dark">
-                        @endif
-                            <div class="card cardhover position-relative top-50 start-50 translate-middle text-center text-dark" style="width: 210px; height: 470px;">
+                        <div class="card cardhover position-relative top-50 start-50 translate-middle text-center text-dark" style="width: 210px; height: 470px;">
+                            @if (!isset(array_count_values(array_column($imgModelos->all(), 'sobremodelo_id'))[$p->id]))
+                            <a id="a3" href="/detalle/{{ $p->id }}" class="link-dark disabledifempty">
+                            @else
+                            <a id="a3" href="/detalle/{{ $p->id }}" class="link-dark">
+                            @endif
                                 @php
                                     $modelo = '';
                                     foreach ($imgModelos as $imgm)

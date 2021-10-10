@@ -40,7 +40,7 @@
             <form method="POST" action="{{ route('updateRol') }}">
                 @csrf
                 <div class="container">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">Nombre y apellido</th>
@@ -53,10 +53,14 @@
                         @foreach ($usuario as $u)
                             <tbody>
                                 <tr>
-                                    <td scope="row"> {{ $u->name }} </td>
+                                    <th scope="row"> {{ $u->name }} </td>
                                     <td> {{ $u->email }} </td>
                                     <td> {{ $u->telefono }} </td>
-                                    <td> {{ $u->rol->nombre }} </td>
+                                    @if ($u->rol->nombre == 'Administrador' || $u->rol->nombre == 'Confiado' )
+                                    <td class="text-info"><strong>{{ $u->rol->nombre }}</strong></td>
+                                    @else
+                                    <td class="text-danger"><strong>{{ $u->rol->nombre }}</strong></td>
+                                    @endif
                                     <td>
                                         <input type="hidden" name="id[]" value="{{ $u->id }}">
                                         <select name="rol[]" class="form-select form-select-sm" aria-label="select">

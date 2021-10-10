@@ -91,7 +91,7 @@ class SobremodeloController extends Controller
         }
     }
 
-    public function estadoUpdate(Request $request)
+    public function estadoUpdateSobremodelo(Request $request)
     {
         $checksave = FALSE;
         $index = 0;

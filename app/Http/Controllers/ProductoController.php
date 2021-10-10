@@ -236,6 +236,25 @@ class ProductoController extends Controller
         }
     }
 
+
+    public function estadoUpdateProducto(Request $request)
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $producto = Producto::findOrFail($rid);
+            $producto->oculto = $request->all()['estado'][$index];
+            $checksave = $producto->save();
+            $index++;
+            
+        }
+        if ($checksave) {
+            return redirect('/lista-productos')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
     public function showListaProductos()
     {
         $listaProductos = Producto::query()->paginate(1000); // puede ser que sean de hasta 100 filas
@@ -306,7 +325,15 @@ class ProductoController extends Controller
         $index = 0;
         foreach ($request->all()['id'] as $rid) {
             $producto = Producto::findOrFail($rid);
-            $producto->precio = $request->all()['precio'][$index];
+            if(ctype_alpha($request->all()['precio'][$index])) {
+                //agregar custom messages for with, por ejemplo "que tipo de problema hubo"
+                $producto->precio = $producto->precio;
+            } elseif (ctype_alnum($request->all()['precio'][$index])) {
+                //agregar custom messages for with
+                $producto->precio = $producto->precio;
+            } else {
+                $producto->precio = $request->all()['precio'][$index];
+            }
             $checksave = $producto->save();
             $index++;
             

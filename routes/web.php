@@ -31,7 +31,7 @@ Route::get('/resultado', [App\Http\Controllers\ProductoController::class, 'scope
 Route::get('/nuevo-sobremodelo', [App\Http\Controllers\SobremodeloController::class, 'nuevoSobremodelo'])->middleware(['auth'])->name('nuevoSobremodelo');
 Route::post('/ingresarsobremodelo', [App\Http\Controllers\SobremodeloController::class, 'ingresarSobremodelo'])->middleware(['auth'])->name('ingresarSobremodelo');
 Route::get('/lista-sobremodelos-estado', [App\Http\Controllers\SobremodeloController::class, 'estadoSelect'])->middleware(['auth'])->name('estadoSobremodeloSelect');
-Route::post('/updateEstado', [App\Http\Controllers\SobremodeloController::class, 'estadoUpdate'])->middleware(['auth'])->name('estadoUpdate');
+Route::post('/updateEstadoSM', [App\Http\Controllers\SobremodeloController::class, 'estadoUpdateSobremodelo'])->middleware(['auth'])->name('estadoUpdateSobremodelo');
 Route::get('/lista-sobremodelos', [App\Http\Controllers\SobremodeloController::class, 'showListaSobremodelos'])->middleware(['auth'])->name('showListaSobremodelos');
 Route::post('/deleteSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'confirmarEliminarSobremodelo'])->middleware(['auth'])->name('confirmarEliminarSobremodelo');
 Route::get('/eliminarSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'showEliminarSobremodelo'])->middleware(['auth'])->name('showEliminarSobremodelo');
@@ -48,7 +48,7 @@ Route::get('/editarProducto/{id}', [App\Http\Controllers\ProductoController::cla
 Route::get('/eliminarProducto/{id}', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->middleware(['auth'])->name('eliminarProducto');
 Route::post('/deleteProduct', [App\Http\Controllers\ProductoController::class, 'confirmarEliminarProducto'])->middleware(['auth'])->name('confirmarEliminarProducto');
 Route::get('/lista-productos-estado', [App\Http\Controllers\ProductoController::class, 'estadoProductoSelect'])->middleware(['auth'])->name('estadoProductoSelect');
-Route::post('/updateEstado', [App\Http\Controllers\ProductoController::class, 'estadoUpdate'])->middleware(['auth'])->name('estadoUpdate');
+Route::post('/updateEstadoP', [App\Http\Controllers\ProductoController::class, 'estadoUpdateProducto'])->middleware(['auth'])->name('estadoUpdateProducto');
 Route::get('/lista-productos', [App\Http\Controllers\ProductoController::class, 'showListaProductos'])->middleware(['auth'])->name('showListaProductos');
 Route::get('/buscar-lista-productos', [App\Http\Controllers\ProductoController::class, 'buscarListaProductos'])->middleware(['auth'])->name('buscarListaProductos');
 

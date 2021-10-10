@@ -35,10 +35,10 @@
                     </div>
                 @endif
             </form>
-            <form method="POST" action="{{ route('estadoUpdate') }}">
+            <form method="POST" action="{{ route('estadoUpdateSobremodelo') }}">
                 @csrf
                 <div class="container">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -50,12 +50,12 @@
                         @foreach ($listaSobremodelos as $lsm)
                             <tbody>
                                 <tr>
-                                    <td scope="row"> {{ $lsm->id }} </td>
+                                    <th scope="row"> {{ $lsm->id }} </td>
                                     <td> {{ $lsm->titulo }} </td>
                                     @if ($lsm->oculto == 0)
-                                    <td> Activo </td>
+                                    <td class="text-success"><strong> Activo </strong></td>
                                     @else
-                                    <td> Oculto </td>
+                                    <td class="text-danger"><strong> Oculto </strong></td>
                                     @endif
                                     <td>
                                         <input type="hidden" name="id[]" value="{{ $lsm->id }}">
