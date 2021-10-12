@@ -3,7 +3,7 @@
 @section('prodCat0')
     <div class="container-fluid">
         <div class="row">
-            @if($producto[0] == null)
+            @if($producto[0] == null) {{--  <-- quizas esto se puede replicar en otras tarjetas para que no aparezcan deshabilitadas. --}}
                 <div class="container pt-4">
                     <h4 class=" ml-6 pl-6">No se encontraron productos en la categoria seleccionada.</h4>
                 </div>
@@ -67,7 +67,12 @@
                                                                                     $minimo = $minimo;
                                                                                 }
                                                                             }
-                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                        $min = '';
+                                                                        if ($minimo == 1000000000000){
+                                                                            $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                        } else{
+                                                                            $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                        }
                                                                         echo $min;
                                                                     @endphp
                                                                 @endif

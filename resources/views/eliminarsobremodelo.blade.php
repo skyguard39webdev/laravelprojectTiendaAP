@@ -6,7 +6,7 @@
         @csrf
         <div class="container">
             <div class="row">
-                <h4>Seleccione el sobremodelo que desea eliminar</h4>
+                <h4>Seleccione la tarjeta que desea eliminar</h4>
                 @if(session()->has('errorDeleating'))
                     <div class="alert alert-danger">
                         {{ session()->get('errorDeleating') }}
@@ -17,9 +17,9 @@
                         {{ session()->get('successDeleating') }}
                     </div>
                 @endif
-                <label for="sobremodelo" class="form-label">Sobremodelo: </label>
+                <label for="sobremodelo" class="form-label">Tarjeta: </label>
                 <select id="sobremodelo" class="form-select" name="sobremodelo_id" required>
-                    <option selected>Seleccionar sobremodelo</option>
+                    <option selected>Seleccionar tarjeta</option>
                     @foreach($sobremodelos as $sm)
                     <option value="{{$sm->id}}"> {{$sm->titulo}} </option>
                     @endforeach

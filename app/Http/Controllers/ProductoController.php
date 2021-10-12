@@ -17,10 +17,10 @@ class ProductoController extends Controller
     {
         // ESTO AL PARECER RECOJE LOS PRODUCTOS DE LA CATEGORIA CORRECTA SIN REPETIRSE
         // WOOOOOOOOOOOOOOOOOOOOOOOW HOW THE FUCK IT IS WORKING, I DON'T KNOW, DON'T ASK ME
-        $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo')
+        $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
             ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
             ->where('productos.subcategoria_id', $cat)
-            // ->distinct()
+            ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
             ->paginate(12);
             
@@ -73,7 +73,7 @@ class ProductoController extends Controller
                 ->get();
         }
 
-        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'oculto')->where('oculto', 0)->distinct()->get();
+        $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto'));
     }
@@ -165,7 +165,7 @@ class ProductoController extends Controller
 
     public function buscarIndex()
     {
-        $producto = Sobremodelo::query()->paginate(12);
+        $producto = Sobremodelo::where('oculto', 0)->paginate(12);
 
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
@@ -178,7 +178,8 @@ class ProductoController extends Controller
             // ->orWhere('descripcion', 'like', "%{$request->termino}%")
             // ->orWhere('marca', 'like', "%{$request->termino}%")
             // ->orWhere('modelo', 'like', "%{$request->termino}%")
-            ->paginate(50);
+            ->where('oculto', 0)
+            ->paginate(150);
 
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
@@ -326,11 +327,10 @@ class ProductoController extends Controller
         foreach ($request->all()['id'] as $rid) {
             $producto = Producto::findOrFail($rid);
             if(ctype_alpha($request->all()['precio'][$index])) {
-                //agregar custom messages for with, por ejemplo "que tipo de problema hubo"
                 $producto->precio = $producto->precio;
-            } elseif (ctype_alnum($request->all()['precio'][$index])) {
-                //agregar custom messages for with
-                $producto->precio = $producto->precio;
+            // } elseif (ctype_alnum($request->all()['precio'][$index])) {
+            //     //agregar custom messages for with
+            //     $producto->precio = $producto->precio;
             } else {
                 $producto->precio = $request->all()['precio'][$index];
             }

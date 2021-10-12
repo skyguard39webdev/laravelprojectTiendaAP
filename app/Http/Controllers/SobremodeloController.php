@@ -16,7 +16,7 @@ class SobremodeloController extends Controller
         // dd(Sobremodelo::select('oculto')->get()->all()[0]->oculto);
         // $subcategorias = Subcategoria::get()->all();
 
-        $producto = Sobremodelo::query()->paginate(12);
+        $producto = Sobremodelo::where('oculto', 0)->paginate(12);
 
         $agregados = Sobremodelo::latest()->limit(4)->get();
 

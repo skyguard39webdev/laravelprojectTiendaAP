@@ -59,15 +59,15 @@
             <div class="col-lg-2 col-sm-12">
                 <label for="categoriaproducto" class="form-label">Subcategoria</label>
                 <select id="categoriaproducto" class="form-select" name="categoria" required>
-                    <option selected value="{{ $producto->subcat_id}}">{{$producto->subcategoria->nombre}}</option>
+                    <option selected value="{{$producto->subcategoria_id}}">{{$producto->subcategoria->nombre}}</option>
                     @foreach($subcategorias as $sc)
                     <option value="{{$sc->id}}">{{$sc->nombre}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-lg-4 col-sm-12">
-                <label for="categoriaproducto" class="form-label">Seleccionar sobremodelo <a href="/nuevo-sobremodelo" class="link-dark" id="1234">(O ingresar uno nuevo)</a></label>
-                <select id="categoriaproducto" class="form-select" name="sobremodelo" required>
+                <label for="sobremodeloproducto" class="form-label">Seleccionar Tarjeta <a href="/nuevo-sobremodelo" class="link-dark" id="1234">(O ingresar una nueva)</a></label>
+                <select id="sobremodeloproducto" class="form-select" name="sobremodelo" required>
                     <option selected value="{{$producto->sobremodelo_id}}">{{$producto->sobremodelo->titulo}}</option>
                     @foreach($sobremodelos as $sm)
                     <option value="{{$sm->id}}">{{$sm->titulo}}</option>

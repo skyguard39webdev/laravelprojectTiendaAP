@@ -60,9 +60,9 @@
                 </select>
             </div>
             <div class="col-lg-6 col-sm-12">
-                <label for="categoriaproducto" class="form-label">Seleccionar sobremodelo <a href="/nuevo-sobremodelo" class="link-dark" id="1234">(O ingresar uno nuevo)</a></label>
+                <label for="categoriaproducto" class="form-label">Seleccionar tarjeta <a href="/nuevo-sobremodelo" class="link-dark" id="1234">(O ingresar una nueva)</a></label>
                 <select id="categoriaproducto" class="form-select" name="sobremodelo" required>
-                    <option selected value="">Seleccionar sobre-modelo</option>
+                    <option selected value="">Seleccionar tarjeta</option>
                     @foreach($sobremodelos as $sm)
                     <option value="{{$sm->id}}">{{$sm->titulo}}</option>
                     @endforeach

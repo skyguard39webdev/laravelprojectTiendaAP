@@ -70,7 +70,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @endif

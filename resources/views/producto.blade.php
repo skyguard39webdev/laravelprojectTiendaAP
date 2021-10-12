@@ -53,7 +53,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>Varios modelos desde USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>Varios modelos desde USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @else
@@ -67,7 +72,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @endif
@@ -165,7 +175,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @endif
@@ -246,7 +261,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>Varios modelos desde USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>Varios modelos desde USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @else
@@ -260,7 +280,12 @@
                                                                                 $minimo = $minimo;
                                                                             }
                                                                         }
-                                                                    $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    $min = '';
+                                                                    if ($minimo == 1000000000000){
+                                                                        $min = "<strong class='text-danger'>AGOTADO</strong>";
+                                                                    } else{
+                                                                        $min = "<strong class='text-danger'>USD " . $minimo . "</strong>";
+                                                                    }
                                                                     echo $min;
                                                                 @endphp
                                                             @endif

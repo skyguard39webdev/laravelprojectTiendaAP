@@ -5,7 +5,7 @@
 <div class="container col-8">
     <form method="POST" action="{{ route('ingresarSobremodelo') }}" class="row g-3" enctype="multipart/form-data">
         @csrf
-        <h3>Ingresar nuevo Sobremodelo</h3>
+        <h3>Ingresar nueva tarjeta</h3>
         @if(session()->has('exitoSobremodelo'))
             <div class="alert alert-success">
                 {{ session()->get('exitoSobremodelo') }}
