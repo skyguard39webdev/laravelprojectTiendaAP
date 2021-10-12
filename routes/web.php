@@ -35,11 +35,17 @@ Route::post('/updateEstadoSM', [App\Http\Controllers\SobremodeloController::clas
 Route::get('/lista-sobremodelos', [App\Http\Controllers\SobremodeloController::class, 'showListaSobremodelos'])->middleware(['auth'])->name('showListaSobremodelos');
 Route::post('/deleteSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'confirmarEliminarSobremodelo'])->middleware(['auth'])->name('confirmarEliminarSobremodelo');
 Route::get('/eliminarSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'showEliminarSobremodelo'])->middleware(['auth'])->name('showEliminarSobremodelo');
+Route::get('/editarSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'showEditarSobremodelo'])->middleware(['auth'])->name('showEditarSobremodelo');
+Route::post('/updateSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'confirmarEditarSobremodelo'])->middleware(['auth'])->name('confirmarEditarSobremodelo');
 
 // CRUD Categorias //
 
 Route::post('/ingresarcategoria', [App\Http\Controllers\CategoriaController::class, 'ingresarCat'])->middleware(['auth'])->name('ingresarCat');
 Route::post('/ingresarsubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'ingresarSubCat'])->middleware(['auth'])->name('ingresarSubCat');
+Route::get('/editarCategoria', [App\Http\Controllers\CategoriaController::class, 'showEditarCategoria'])->middleware(['auth'])->name('showEditarCategoria');
+Route::post('/updateCategoria', [App\Http\Controllers\CategoriaController::class, 'confirmarEditarCategoria'])->middleware(['auth'])->name('confirmarEditarCategoria');
+Route::get('/editarSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'showEditarSubcategoria'])->middleware(['auth'])->name('showEditarSubcategoria');
+Route::post('/updateSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'confirmarEditarSubcategoria'])->middleware(['auth'])->name('confirmarEditarSubcategoria');
 
 /////// CRUD Producto /////////
 

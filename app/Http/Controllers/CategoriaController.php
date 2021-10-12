@@ -26,4 +26,24 @@ class CategoriaController extends Controller
             return redirect('/nueva-cat')->with('success', 'Se ha guardado la nueva Categoria con exito.');
         }
     }
+
+    public function showEditarCategoria()
+    {
+        $categorias = Categoria::query()->get();
+
+        return view('editarcategoria', compact('categorias'));
+    }
+
+    public function confirmarEditarCategoria(Request $request)
+    {
+        $categoria = Categoria::findOrFail($request->categoria_id);
+        $categoria->nombre = $request->nombre;
+        $checksave = $categoria->save();
+
+        if ($checksave) {
+            return back()->with('successUpdating', 'El nombre de la categoría ha sido actualizado con exito.');
+        } else {
+            App::abort(500, 'Error de servidor');
+        }
+    }
 }

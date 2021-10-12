@@ -54,13 +54,16 @@
                                         <ul>
                                             <li class="mt-4" ><a href="/lista-usuarios" class="link-lateral">Lista de usuarios</a></li>
                                             <li class="mt-4" ><a href="/nuevo-producto" class="link-lateral">Ingresar Producto</a></li>
+                                            <li class="mt-4" ><a href="/lista-productos-precio" class="link-lateral">Editar Precios de Productos</a></li>
+                                            <li class="mt-4" ><a href="/lista-productos" class="link-lateral">Mostrar/Ocultar Productos</a></li>
                                             <li class="mt-4" ><a href="/nueva-cat" class="link-lateral">Ingresar Categoria</a></li>
+                                            <li class="mt-4" ><a href="/editarCategoria" class="link-lateral">Editar Categoria</a></li>
                                             <li class="mt-4" ><a href="/nueva-subcat" class="link-lateral">Ingresar Subcategoria</a></li>
+                                            <li class="mt-4" ><a href="/editarSubcategoria" class="link-lateral">Editar Subcategoria</a></li>
                                             <li class="mt-4" ><a href="/nuevo-sobremodelo" class="link-lateral">Ingresar Tarjeta</a></li>
                                             <li class="mt-4" ><a href="/eliminarSobremodelo" class="link-lateral">Eliminar Tarjeta</a></li>
+                                            <li class="mt-4" ><a href="/editarSobremodelo" class="link-lateral">Editar Tarjeta</a></li>
                                             <li class="mt-4" ><a href="/lista-sobremodelos" class="link-lateral">Mostrar/Ocultar Tarjetas</a></li>
-                                            <li class="mt-4" ><a href="/lista-productos" class="link-lateral">Mostrar/Ocultar Productos</a></li>
-                                            <li class="mt-4" ><a href="/lista-productos-precio" class="link-lateral">Editar Precios de Productos</a></li>
                                         </ul>
                                     </div>
                                 </div>

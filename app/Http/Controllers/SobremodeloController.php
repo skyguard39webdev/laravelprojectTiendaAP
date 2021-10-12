@@ -55,17 +55,17 @@ class SobremodeloController extends Controller
         if (!$checksave){
             App::abort(500, 'Error');
         }else {
-            return redirect('/nuevo-sobremodelo')->with('exitoSobremodelo', 'Se ha guardado el nuevo Sobremodelo con exito.');
+            return redirect('/nuevo-sobremodelo')->with('exitoSobremodelo', 'Se ha guardado la nueva tarjeta con exito.');
         }
     }
 
     public function confirmarEliminarSobremodelo(Request $request)
     {   
         if( !empty(Producto::where('sobremodelo_id', $request->sobremodelo_id)->get()->all()) ) {
-            return back()->with('errorDeleating', 'El sobremodelo asociado no ha podido ser eliminado.');
+            return back()->with('errorDeleating', 'La tarjeta asociada no ha podido ser eliminada. Aun tiene productos asociados (Sugerencia: mover los productos a otra tarjeta).');
         } else {
             Sobremodelo::where('id', $request->sobremodelo_id)->delete();
-            return back()->with('successDeleating', 'El sobremodelo asociado se ha eliminado correctamente.');
+            return back()->with('successDeleating', 'La tarjeta asociada se ha eliminado correctamente.');
         }
     }
 
@@ -120,6 +120,26 @@ class SobremodeloController extends Controller
         }
         else {
             return redirect('/');
+        }
+    }
+    
+    public function showEditarSobremodelo()
+    {
+        $sobremodelos = Sobremodelo::query()->get();
+
+        return view('editarsobremodelo', compact('sobremodelos'));
+    }
+
+    public function confirmarEditarSobremodelo(Request $request)
+    {
+        $sobremodelo = Sobremodelo::findOrFail($request->sobremodelo_id);
+        $sobremodelo->titulo = $request->titulo;
+        $checksave = $sobremodelo->save();
+
+        if ($checksave) {
+            return back()->with('successUpdating', 'El titulo de la tarjeta ha sido actualizado con exito.');
+        } else {
+            App::abort(500, 'Error de servidor');
         }
     }
 }

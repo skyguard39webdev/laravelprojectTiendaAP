@@ -25,4 +25,24 @@ class SubcategoriaController extends Controller
             return redirect('/nueva-subcat')->with('success', 'Se ha guardado la nueva Subcategoria con exito.');
         }
     }
+
+    public function showEditarSubcategoria()
+    {
+        $subcategorias = Subcategoria::query()->get();
+
+        return view('editarsubcategoria', compact('subcategorias'));
+    }
+
+    public function confirmarEditarSubcategoria(Request $request)
+    {
+        $subcategoria = Subcategoria::findOrFail($request->subcategoria_id);
+        $subcategoria->nombre = $request->nombre;
+        $checksave = $subcategoria->save();
+
+        if ($checksave) {
+            return back()->with('successUpdating', 'El nombre de la categoría ha sido actualizado con exito.');
+        } else {
+            App::abort(500, 'Error de servidor');
+        }
+    }
 }

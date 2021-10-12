@@ -77,6 +77,9 @@
                             @yield('omsobremodelo')
                             @yield('omproductos')
                             @yield('editarpreciosproductos')
+                            @yield('editarSobremodelo')
+                            @yield('editarCategoria')
+                            @yield('editarSubcategoria')
                         </div>
                     </div>
                 </div>
