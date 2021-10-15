@@ -16,11 +16,32 @@ class SobremodeloController extends Controller
         // dd(Sobremodelo::select('oculto')->get()->all()[0]->oculto);
         // $subcategorias = Subcategoria::get()->all();
 
-        $producto = Sobremodelo::where('oculto', 0)->paginate(12);
+        $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
+            ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+            ->where('productos.oculto', 0)
+            ->where('sobremodelos.oculto', 0)
+            ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
+            ->paginate(12);
 
-        $agregados = Sobremodelo::latest()->limit(4)->get();
+        // $agregados = Sobremodelo::latest()->where('oculto', 0)->limit(4)->get();
+        $agregados = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto', 'sobremodelos.created_at')
+            ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+            ->where('productos.oculto', 0)
+            ->where('sobremodelos.oculto', 0)
+            ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
+            ->latest()
+            ->limit(4)
+            ->get();
 
-        $actualizados = Sobremodelo::orderBy('updated_at', 'desc')->limit(4)->get();
+        // $actualizados = Sobremodelo::where('oculto', 0)->orderBy('updated_at', 'desc')->limit(4)->get();
+        $actualizados = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto', 'sobremodelos.updated_at')
+        ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+        ->where('productos.oculto', 0)
+        ->where('sobremodelos.oculto', 0)
+        ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
+        ->orderBy('updated_at', 'desc')
+        ->limit(4)
+        ->get();
 
         // esta funcion agarra los diferentes valores en sobremodelo
         // es importante decirle al select que hay que traer de modelo porque sino no trae nada mas que lo solicitado en el select

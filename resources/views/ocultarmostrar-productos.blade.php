@@ -67,18 +67,25 @@
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
+                                <th scope="col">Imagen</th>
                                 <th scope="col">Titulo</th>
                                 <th scope="col">Modelo</th>
                                 <th scope="col">Precio</th>
                                 <th scope="col">Estado</th>
+                                <th scope="col">Tarjeta</th>
                                 <th scope="col">Seleccionar Estado</th>
                             </tr>
                         </thead>
                         @foreach ($listaProductos as $lp)
                             <tbody>
-                                <tr>
+                                <tr class="align-middle">
                                     <th scope="row"> {{ $lp->id }} </td>
-                                    <td> {{ $lp->titulo }} </td>
+                                    <td scope="row"> <img src="{{ asset('img/'.$lp->modelo.'.jpg') }}" alt="mini" class="" width="48"></td>
+                                    <td>
+                                        <a class="text-white" style="text-decoration: none;" href="/detalle/{{ $lp->id }}/{{ $lp->sobremodelo_id }}">{{ $lp->titulo }}</a>
+                                        <a href="/editarProducto/{{$lp->id}}" class="underline text-sm text-info ml-2">Editar</a>
+                                        <a href="/eliminarProducto/{{$lp->id}}" class="underline text-sm text-info ml-2">Eliminar</a>
+                                    </td>
                                     <td> {{ $lp->modelo }} </td>
                                     <td> {{ $lp->precio }} </td>
                                     @if ($lp->oculto == 0)
@@ -86,6 +93,7 @@
                                     @else
                                     <td class="text-danger"><strong> Oculto </strong></td>
                                     @endif
+                                    <td> {{ $lp->sobremodelo->titulo }}</td>
                                     <td>
                                         <input type="hidden" name="id[]" value="{{ $lp->id }}">
                                         <select name="estado[]" class="form-select form-select-sm" aria-label="select">

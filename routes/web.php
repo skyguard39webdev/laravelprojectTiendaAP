@@ -62,6 +62,7 @@ Route::get('/lista-productos-precio', [App\Http\Controllers\ProductoController::
 Route::get('/lista-productos-estado-precio', [App\Http\Controllers\ProductoController::class, 'estadoPrecioSelect'])->middleware(['auth'])->name('estadoPrecioSelect');
 Route::post('/updatePrecio', [App\Http\Controllers\ProductoController::class, 'precioUpdate'])->middleware(['auth'])->name('precioUpdate');
 Route::get('/buscar-lista-productos-precio', [App\Http\Controllers\ProductoController::class, 'buscarListaProductosPrecios'])->middleware(['auth'])->name('buscarListaProductosPrecios');
+Route::post('/movercrear-productotarjeta', [App\Http\Controllers\ProductoController::class, 'moverProductoTarjeta'])->middleware(['auth'])->name('moverProductoTarjeta');
 
 
 

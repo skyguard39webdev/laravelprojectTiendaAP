@@ -20,62 +20,93 @@ class ProductoController extends Controller
         $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
             ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
             ->where('productos.subcategoria_id', $cat)
+            ->where('productos.oculto', 0)
             ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
             ->paginate(12);
             
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')
-            ->where('subcategoria_id', $cat)->where('oculto', 0)
+            ->where('subcategoria_id', $cat)
+            ->where('oculto', 0)
             ->distinct()
             ->get();
 
         return view('productos.cat', compact('producto', 'imgModelos'));
     }
 
-    public function idProd($id) //detalle
+    public function idProd($id)  // Detalle1
     {
         $producto = Producto::where('sobremodelo_id', $id)->where('oculto', 0)->get();
         
-        $relacionado = explode(' ', $producto[0]->titulo, -1);
+        if(isset($producto[0]->titulo)) {
+            $relacionado = explode(' ', $producto[0]->titulo, -1);
+        }
 
         if(empty($relacionado)) {
             $recomendados = Sobremodelo::latest()->limit(4)->get();
         }else {
-            $recomendados = Sobremodelo::where('titulo', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('descripcion', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('marca', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('modelo', 'like', "%{$relacionado[0]}%")
+            $recomendados = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
+                ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+                ->where('sobremodelos.titulo', 'like', "%{$relacionado[0]}%")
+                ->where('productos.oculto', 0)
+                ->where('sobremodelos.oculto', 0)
+                ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
                 ->limit(4)
                 ->get();
         }
 
+        $sobremodelos = Sobremodelo::where('oculto', 0)->get();
+
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
-        return view('detalle', compact('producto', 'recomendados', 'imgModelos'));
+        return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'sobremodelos'));
     }
 
-    public function detalleextra($producto_id, $sobremodelo_id)
+    public function detalleextra($producto_id, $sobremodelo_id) // Detalle2
     {
         $producto = Producto::where('sobremodelo_id', $sobremodelo_id)->get();
 
         $main_producto = Producto::where('id', $producto_id)->get();
-        
-        $relacionado = explode(' ', $producto[0]->titulo, -1);
+
+        if(isset($producto[0]->titulo)) {
+            $relacionado = explode(' ', $producto[0]->titulo, -1);
+        }
 
         if(empty($relacionado)) {
-            $recomendados = Sobremodelo::latest()->limit(4)->get();
+            $recomendados = Sobremodelo::latest()->where('oculto', 0)->limit(4)->get();
         }else {
-            $recomendados = Sobremodelo::where('titulo', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('descripcion', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('marca', 'like', "%{$relacionado[0]}%")
-                // ->orWhere('modelo', 'like', "%{$relacionado[0]}%")
+            $recomendados = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
+                ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+                ->where('sobremodelos.titulo', 'like', "%{$relacionado[0]}%")
+                ->where('productos.oculto', 0)
+                ->where('sobremodelos.oculto', 0)
+                ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
                 ->limit(4)
                 ->get();
         }
 
+        $sobremodelos = Sobremodelo::where('oculto', 0)->get();
+
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
-        return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto'));
+        // dd($main_producto->all()[0]->oculto);
+        if (Auth::user() != null) {
+            $usuarioLoggeado = Auth::user();
+            if ($usuarioLoggeado->rol_id == 4 && $main_producto->all()[0]->oculto == 1) {
+                session()->flash('advertenciaOculto', 'Está visualizando esta pagina como administrador. El producto que está visualizando está oculto');
+                return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto', 'sobremodelos'));
+            } else if ($usuarioLoggeado->rol_id != 4 && $main_producto->all()[0]->oculto == 1) {
+                App::abort(404, 'Error. Pagina no encontrada!');
+            } else if ($usuarioLoggeado->rol_id != 4) {
+                return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto', 'sobremodelos'));
+            }else {
+                return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto', 'sobremodelos'));
+            }
+        } else if ($main_producto->all()[0]->oculto == 1){
+            abort(404, 'Error. Pagina no encontrada.');
+        } else {
+            return view('detalle', compact('producto', 'recomendados', 'imgModelos', 'main_producto', 'sobremodelos'));
+        }
     }
 
     public function nuevoProducto()
@@ -165,7 +196,12 @@ class ProductoController extends Controller
 
     public function buscarIndex()
     {
-        $producto = Sobremodelo::where('oculto', 0)->paginate(12);
+        $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
+            ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+            ->where('productos.oculto', 0)
+            ->where('sobremodelos.oculto', 0)
+            ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
+            ->paginate(12);
 
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
@@ -174,12 +210,13 @@ class ProductoController extends Controller
                     //scope es para poder utilizar el query mas adelante de forma mas rapida citando el nombre de la funcion
     public function scopeBuscarProducto(Request $request)
     {
-        $producto = Sobremodelo::where('titulo', 'like', "%{$request->termino}%")
-            // ->orWhere('descripcion', 'like', "%{$request->termino}%")
-            // ->orWhere('marca', 'like', "%{$request->termino}%")
-            // ->orWhere('modelo', 'like', "%{$request->termino}%")
-            ->where('oculto', 0)
-            ->paginate(150);
+        $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
+            ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
+            ->where('sobremodelos.titulo', 'like', "%{$request->termino}%")
+            ->where('productos.oculto', 0)
+            ->where('sobremodelos.oculto', 0)
+            ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
+            ->paginate(12);
 
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
@@ -353,10 +390,49 @@ class ProductoController extends Controller
 
         if ( $usuarioLoggeado->rol_id == 4) {
             return view('editarprecios-productos', compact('listaProductos'));
-            // return redirect('/lista-sobremodelos', compact('listaSobremodelos'));
         }
         else {
             return redirect('/');
+        }
+    }
+
+    public function moverProductoTarjeta(Request $request)
+    {
+        if ($request->accion == 0) {           // crear tarjeta y mover
+            $sobremodelo = new Sobremodelo;
+            $unique = Sobremodelo::where('titulo', $request->titulo)->get();
+            if (isset($unique->all()[0]->titulo)){
+                if (strtolower($unique->all()[0]->titulo) == strtolower($request->titulo)) {
+                    return back()->with('errorCrear', 'El titulo de tarjeta ya existe.');
+                }
+            }
+            if ($request->titulo == null) {
+                return back()->with('errorCrear', 'El campo de titulo de tarjeta no puede estar vacío.');
+            }
+            $sobremodelo->titulo = $request->titulo;
+            $sobremodelo->oculto = 0;
+            $checksave = $sobremodelo->save();
+
+            $producto = Producto::findOrFail($request->id);
+            $producto->sobremodelo_id = $sobremodelo->id;
+            $producto->save();
+            
+            if (!$checksave){
+                App::abort(500, 'Error');
+            }else {
+                return redirect('/detalle/'.$producto->id.'/'.$sobremodelo->id)->with('exitoCrear', 'Se ha creado la nueva tarjeta y movido el producto con exito.');
+            }
+
+        }else if ($request->accion == 1) {    // mover a otra tarjeta
+            $producto = Producto::findOrFail($request->id);
+            $producto->sobremodelo_id = $request->sobremodelo_id;
+            $checksave = $producto->save();
+            
+            if (!$checksave){
+                App::abort(500, 'Error');
+            }else {
+                return redirect('/detalle/'.$producto->id.'/'.$producto->sobremodelo_id)->with('exitoMover', 'Se ha movido el producto a la tarjeta seleccionada con exito.');
+            }
         }
     }
 

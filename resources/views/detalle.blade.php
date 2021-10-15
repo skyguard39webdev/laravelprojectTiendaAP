@@ -7,6 +7,12 @@
             <form method="POST" action="{{ route('carritoSaveProducto') }}">
                 @csrf
                 <div class="row">
+                    @if(session()->has('advertenciaOculto'))
+                        <div class="alert alert-danger mt-4">
+                            {{ session()->get('advertenciaOculto') }}
+                            {{ session()->forget('advertenciaOculto') }}
+                        </div>
+                    @endif
                     <div class="col-lg-4 col-sm-12">
                         <img src="{{ asset('img'. '/' . $main_producto[0]->modelo .'.jpg') }}" alt="{{ $main_producto[0]->modelo }}" width="500" height="500">
                     </div>
@@ -22,7 +28,7 @@
                             <h5>Marca: <strong> {{ $main_producto[0]->marca }}</strong></h5>
                         @endif
                         <p>{{ $main_producto[0]->descripcion }}</p>
-                        <input type="hidden" name="idProd" value="{{ $main_producto[0]->id }}">
+                        <input type="hidden" name="idProd" value="{{ $main_producto[0]->id }}" id="idProdView">
                         @if (Route::has('login'))
                             @auth
                                 @isset(Auth::user()->rol_id)
@@ -63,19 +69,158 @@
                                 {{ session()->get('error') }}
                             </div>
                         @endif
-                        <div class="dropdown mt-4">
-                            <x-button class="no-click">Modelos</x-button>
-                            <div class="dropdown-content">
-                                @foreach ($producto as $prod)
-                                    @if ($prod->oculto != 1)
-                                        <a href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->sobremodelo->titulo . ' - ' . $prod->modelo}}</a>
-                                    @endif
-                                @endforeach
+                        @if(session()->has('errorCrear'))
+                            <div class="alert alert-danger mt-4">
+                                {{ session()->get('errorCrear') }}
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        @endif
+                        @if(session()->has('exitoCrear'))
+                            <div class="alert alert-success mt-4">
+                                {{ session()->get('exitoCrear') }}
+                            </div>
+                        @endif
+                        @if(session()->has('exitoMover'))
+                            <div class="alert alert-success mt-4">
+                                {{ session()->get('exitoMover') }}
+                            </div>
+                        @endif
             </form>
+                            
+                        @isset(Auth::user()->rol_id)
+                            @if (Auth::user()->rol_id == 4)
+                                <form method="POST" action="{{ route('moverProductoTarjeta') }}">
+                                    @csrf
+                                    <div class="mt-3">
+                                        <p><strong> Opciones de tarjeta: </strong></p>
+                                        <div>
+                                            <input type="radio" name="mc" id="c1A" onclick="habilitar()" value="0">
+                                            <label for="c1">Crear nueva tarjeta</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="mc" id="m1A" onclick="habilitar()" value="1">
+                                            <label for="m1">Mover a otra tarjeta</label>
+                                        </div>
+                                        <span id="crearA" class="mt-4">
+                                            <label for="crear1" class="form-label">Escriba el nombre de la nueva tarjeta: </label>
+                                            <input type="text" class="form-control" name="titulo" value="{{$main_producto[0]->sobremodelo->titulo}}" style="width: 400px;">
+                                            <input type="hidden" name="id" value="{{$main_producto[0]->id}}">
+                                            <input type="hidden" name="accion" value="0" id="accioncrearA">
+                                        </span>
+                                        <span id="moverA" class="mt-4">
+                                            <label for="mover1A" class="form-label">Tarjeta: </label>
+                                            <select id="mover1A" class="form-select" name="sobremodelo_id" required style="width: 200px;">
+                                                <option selected>Seleccionar tarjeta</option>
+                                                @foreach($sobremodelos as $sm)
+                                                <option value="{{$sm->id}}"> {{$sm->titulo}} </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" name="id" value="{{$main_producto[0]->id}}">
+                                            <input type="hidden" name="accion" value="1" id="accionmoverA">
+                                        </span>
+                                        <div>
+                                            <x-button class="mt-4" id="botonmcA">
+                                                {{ __('Confirmar') }}
+                                            </x-button>
+                                        </div>
+                                    </div>
+                                    
+                                    <script type="text/javascript">
+                                        function habilitar() {
+                                            var radioCrear = document.getElementById("c1A");
+                                            var radioMover = document.getElementById("m1A");
+                                            var spanCrear = document.getElementById("crearA");
+                                            var spanMover = document.getElementById("moverA");
+                                            var boton = document.getElementById("botonmcA");
+                                            var accionCrear = document.getElementById("accioncrearA");
+                                            var accionMover = document.getElementById("accionmoverA");
+
+                                            if (radioCrear.checked) {
+                                                spanMover.style.display = 'none';
+                                                spanMover.disabled = true;
+                                                spanCrear.style.display = '';
+                                                spanCrear.disabled = false;
+                                                boton.style.display = '';
+                                                accionCrear.disabled = false;
+                                                accionMover.disabled = true;
+                                            } else if (radioMover.checked){
+                                                spanCrear.style.display = 'none';
+                                                spanCrear.disabled = true;
+                                                spanMover.style.display = '';
+                                                spanMover.disabled = false;
+                                                boton.style.display = '';
+                                                accionCrear.disabled = true;
+                                                accionMover.disabled = false;
+                                            } else {
+                                                spanCrear.style.display = 'none';
+                                                spanCrear.disabled = true;
+                                                spanMover.style.display = 'none';
+                                                spanMover.disabled = true;
+                                                boton.style.display = 'none';
+                                                accionCrear.disabled = true;
+                                                accionMover.disabled = true;
+                                            }
+                                            
+                                        }
+                                        document.onload = habilitar();
+                                    </script>
+                                </form>
+                            @endif
+                        @endisset
+                        <div class="mt-6 col-4">
+                            <p id="otrosModelos"><strong> Otros modelos: </strong></p>
+                            <ul class="list-group">
+                            @foreach ($producto as $prod)
+                                {{-- @if ($prod->oculto != 1) --}}
+                                <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
+                                <li id="link{{$prod->id}}" class="list-group-item">
+                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong></a>
+                                </li>
+                                {{-- @endif --}}
+                            @endforeach
+                            </ul>
+                        </div>
+                {{-- el siguiente div cierra un div.row mas arriba --}}
+                </div>
+                <script type="text/javascript">
+                    function checkLink() {
+                        var productos = <?php echo json_encode($producto); ?>;
+                        var i = 0;
+                        var contarOcultos = 0;
+                        for (var p in productos) {
+                            if (i <= productos.length) {
+                                console.log(i);
+                                var modeloOpcional = document.getElementById("link" + productos[i].id);
+                                var idProdLink = document.getElementById("idLink" + productos[i].id);
+                                var idProdView = document.getElementById("idProdView");
+                                var otrosModelos = document.getElementById("otrosModelos");
+                                var link = document.getElementById("click"  + productos[i].id);
+                                
+
+                                if (productos[i].oculto == 1){
+                                    contarOcultos++;
+                                }
+                                
+                                if(idProdLink.value == idProdView.value){
+                                    // modeloOpcional.style.display = 'none';
+                                    modeloOpcional.classList.add("active");
+                                    modeloOpcional.classList.add("text-light");
+                                    link.classList.remove("text-dark");
+                                    link.classList.add("text-white");
+                                    link.classList.add("disabledifempty");
+                                    // modeloOpcional.disabled = true;
+                                }
+
+                                if (productos.length <= 1 || productos.length == contarOcultos || productos[i].oculto == 1){
+                                    otrosModelos.style.display = 'none';
+                                    modeloOpcional.style.display = 'none';
+                                }
+                            }
+                            i++;
+
+                        }
+                    }
+                    document.onload = checkLink();
+                </script>
         @else
             <form method="POST" action="{{ route('carritoSaveProducto') }}">
                 @csrf
@@ -95,7 +240,7 @@
                             <h5>Marca: <strong> {{ $producto[0]->marca }}</strong></h5>
                         @endif
                         <p>{{ $producto[0]->descripcion }}</p>
-                        <input type="hidden" name="idProd" value="{{ $producto[0]->id }}">
+                        <input type="hidden" name="idProd" value="{{ $producto[0]->id }}" id="idProdView">
                         @if (Route::has('login'))
                             @auth
                                 @isset(Auth::user()->rol_id)
@@ -136,19 +281,160 @@
                                 {{ session()->get('error') }}
                             </div>
                         @endif
-                        <div class="dropdown mt-4">
-                            <x-button class="no-click">Modelos</x-button>
-                            <div class="dropdown-content" id="scrollbar1">
-                                @foreach ($producto as $prod)
-                                    @if ($prod->oculto != 1)
-                                        <a href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->sobremodelo->titulo . ' - ' . $prod->modelo}}</a>
-                                    @endif  
-                                @endforeach
+                        @if(session()->has('errorCrear'))
+                            <div class="alert alert-danger mt-4">
+                                {{ session()->get('errorCrear') }}
                             </div>
+                        @endif
+                        @if(session()->has('exitoCrear'))
+                            <div class="alert alert-success mt-4">
+                                {{ session()->get('exitoCrear') }}
+                            </div>
+                        @endif
+                        @if(session()->has('exitoMover'))
+                            <div class="alert alert-success mt-4">
+                                {{ session()->get('exitoMover') }}
+                            </div>
+                        @endif
+            </form>
+                            
+                        @isset(Auth::user()->rol_id)
+                            @if (Auth::user()->rol_id == 4)
+                                <form method="POST" action="{{ route('moverProductoTarjeta') }}">
+                                    @csrf
+                                    <div class="mt-4">
+                                        <p><strong> Opciones de tarjeta: </strong></p>
+                                        <div>
+                                            <input type="radio" name="mc" id="c1B" onclick="habilitar()" value="0">
+                                            <label for="c1">Crear nueva tarjeta</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="mc" id="m1B" onclick="habilitar()" value="1">
+                                            <label for="m1">Mover a otra tarjeta</label>
+                                        </div>
+                                        <span id="crearB" class="mt-4">
+                                            <label for="crear1" class="form-label">Escriba el nombre de la nueva tarjeta: </label>
+                                            <input type="text" class="form-control" name="titulo" value="{{$producto[0]->sobremodelo->titulo}}" style="width: 400px;">
+                                            <input type="hidden" name="id" value="{{$producto[0]->id}}">
+                                            <input type="hidden" name="accion" value="0" id="accioncrearB">
+                                        </span>
+                                        <span id="moverB" class="mt-4">
+                                            <label for="mover1B" class="form-label">Tarjeta: </label>
+                                            <select id="mover1B" class="form-select" name="sobremodelo_id" required style="width: 200px;">
+                                                <option selected>Seleccionar tarjeta</option>
+                                                @foreach($sobremodelos as $sm)
+                                                <option value="{{$sm->id}}"> {{$sm->titulo}} </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" name="id" value="{{$producto[0]->id}}">
+                                            <input type="hidden" name="accion" value="1" id="accionmoverB">
+                                        </span>
+                                        <div>
+                                            <x-button class="mt-4" id="botonmcB">
+                                                {{ __('Confirmar') }}
+                                            </x-button>
+                                        </div>
+                                    </div>
+                                    
+                                    <script type="text/javascript">
+                                        function habilitar() {
+                                            var radioCrear = document.getElementById("c1B");
+                                            var radioMover = document.getElementById("m1B");
+                                            var spanCrear = document.getElementById("crearB");
+                                            var spanMover = document.getElementById("moverB");
+                                            var boton = document.getElementById("botonmcB");
+                                            var accionCrear = document.getElementById("accioncrearB");
+                                            var accionMover = document.getElementById("accionmoverB");
+                                            
+
+                                            if (radioCrear.checked) {
+                                                spanMover.style.display = 'none';
+                                                spanMover.disabled = true;
+                                                spanCrear.style.display = '';
+                                                spanCrear.disabled = false;
+                                                boton.style.display = '';
+                                                accionCrear.disabled = false;
+                                                accionMover.disabled = true;
+                                            } else if (radioMover.checked){
+                                                spanCrear.style.display = 'none';
+                                                spanCrear.disabled = true;
+                                                spanMover.style.display = '';
+                                                spanMover.disabled = false;
+                                                boton.style.display = '';
+                                                accionCrear.disabled = true;
+                                                accionMover.disabled = false;
+                                            } else {
+                                                spanCrear.style.display = 'none';
+                                                spanCrear.disabled = true;
+                                                spanMover.style.display = 'none';
+                                                spanMover.disabled = true;
+                                                boton.style.display = 'none';
+                                                accionCrear.disabled = true;
+                                                accionMover.disabled = true;
+                                            }
+                                            
+                                        }
+                                        document.onload = habilitar();
+                                    </script>
+                                </form>
+                            @endif
+                        @endisset
+
+                        <div class="mt-6 col-4">
+                            <p id="otrosModelos"><strong> Otros modelos: </strong></p>
+                            <ul class="list-group">
+                            @foreach ($producto as $prod)
+                                @if ($prod->oculto != 1)
+                                <li id="link{{$prod->id}}" class="list-group-item">
+                                    <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
+                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong></a>
+                                </li>
+                                @endif
+                            @endforeach
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </form>
+                <script type="text/javascript">
+                    function checkLink() {
+                        var productos = <?php echo json_encode($producto); ?>;
+                        var i = 0;
+                        var contarOcultos = 0;
+                        for (var p in productos) {
+                            if (i <= productos.length) {
+                                console.log(i);
+                                var modeloOpcional = document.getElementById("link" + productos[i].id);
+                                var idProdLink = document.getElementById("idLink" + productos[i].id);
+                                var idProdView = document.getElementById("idProdView");
+                                var otrosModelos = document.getElementById("otrosModelos");
+                                var link = document.getElementById("click"  + productos[i].id);
+                                
+
+                                if (productos[i].oculto == 1){
+                                    contarOcultos++;
+                                }
+                                
+                                if(idProdLink.value == idProdView.value){
+                                    // modeloOpcional.style.display = 'none';
+                                    modeloOpcional.classList.add("active");
+                                    modeloOpcional.classList.add("text-light");
+                                    link.classList.remove("text-dark");
+                                    link.classList.add("text-white");
+                                    link.classList.add("disabledifempty");
+                                    // modeloOpcional.disabled = true;
+                                }
+
+                                if (productos.length <= 1 || productos.length == contarOcultos || productos[i].oculto == 1){
+                                    otrosModelos.style.display = 'none';
+                                    modeloOpcional.style.display = 'none';
+                                }
+                            }
+                            i++;
+
+                        }
+                    }
+                    document.onload = checkLink();
+                </script>
         @endif
         <br>
         <div class="row">
