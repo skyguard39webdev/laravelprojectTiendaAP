@@ -7,6 +7,20 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Tienda DistribuidoraAP
+Source code for https://distribuidoraap.com/
+Comercial and love project with the following functionalities:
+ - Complete CMS to manage web page content
+ - User data viewer
+ - Registration system with e-mail notificacions over gmail smtp server.
+ - Order placement (no payment) over email.
+
+Coming soon:
+ - Order placement history
+ - Database overhaul
+
+Note: ATM working on react skills.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
