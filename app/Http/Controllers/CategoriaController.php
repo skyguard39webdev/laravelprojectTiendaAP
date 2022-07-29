@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use App;
+use App\Models\Subcategoria;
 
 class CategoriaController extends Controller
 {
@@ -44,6 +45,23 @@ class CategoriaController extends Controller
             return back()->with('successUpdating', 'El nombre de la categoría ha sido actualizado con exito.');
         } else {
             App::abort(500, 'Error de servidor');
+        }
+    }
+
+    public function showEliminarCategoria()
+    {
+        $categorias = Categoria::query()->get();
+
+        return view('eliminarcategoria', compact('categorias'));
+    }
+
+    public function confirmarEliminarCategoria(Request $request)
+    {   
+        if( !empty(Subcategoria::where('cat_id', $request->categoria)->get()->all()) ) {
+            return back()->with('errorDeleating', 'La categoria asociada no ha podido ser eliminada. Aun tiene subcategoria/s asociadas.');
+        } else {
+            Categoria::where('id', $request->categoria)->delete();
+            return back()->with('successDeleating', 'La categoria se ha eliminado correctamente.');
         }
     }
 }

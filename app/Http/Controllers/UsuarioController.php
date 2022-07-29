@@ -12,7 +12,7 @@ class UsuarioController extends Controller
     public function index()
     {
 
-        $usuario = User::query()->paginate(50); // puede ser que sean de hasta 100 filas
+        $usuario = User::query()->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 

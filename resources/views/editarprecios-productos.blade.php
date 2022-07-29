@@ -55,11 +55,12 @@
                 <div class="container">
                     <table class="table table-striped table-bordered table-dark">
                         <thead>
-                            <tr>
+                            <tr class="align-middle">
                                 <th scope="col">Id</th>
                                 <th scope="col">Imagen</th>
                                 <th scope="col">Titulo</th>
                                 <th scope="col">Modelo</th>
+                                <th scope="col">Sub-subcategoria</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col">Tarjeta</th>
                                 <th scope="col">Precio</th>
@@ -77,6 +78,7 @@
                                         <a href="/eliminarProducto/{{$lp->id}}" class="underline text-sm text-info ml-2">Eliminar</a>
                                     </td>
                                     <td> {{ $lp->modelo }}  </td>
+                                    <td> {{ $lp->subsubcategoria->nombre }} </td>
                                     @if ($lp->oculto == 0)
                                     <td class="text-success"><strong> Activo </strong></td>
                                     @else

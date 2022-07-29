@@ -12,6 +12,7 @@ class Sobremodelo extends Model
     protected $fillable = [
         'titulo',
         'oculto',
+        'destacado',
     ];
 
     public function producto()

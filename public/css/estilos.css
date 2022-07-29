@@ -133,3 +133,54 @@ a.link-dark {
     background-color: rgb(55, 65, 81) !important;
     border-color: rgb(55, 65, 81) !important;
 }
+/* en la siguiente seccion coloreo botones, segun id */
+
+#boton1 { 
+    background-color: #010135;
+    color: white;
+
+}
+
+#boton2 {
+    background-color: #01528a;
+    color: white;
+
+}
+
+#boton3 {
+    background-color: #0096d3;
+    color: white;
+}
+
+#boton4 {
+    background-color: #010135;
+    color: white;
+}
+
+#boton5 {
+    background-color: #01528a;
+    color: white;
+}
+
+/* quizas queda mejor sin el padding que tiene naturalmente offcanvas-body */
+
+.offcanvas-body {
+	flex-grow: 1;
+	padding: 0rem 0rem; /* usualmente es de 1rem */
+	overflow-y: auto;
+
+
+}
+
+#categoriasoffcanvas {
+        padding-left: 1rem;
+}
+/* override de el body para los diferentes accordions, quedan mejor mas a la izq */
+.accordion-body {
+	padding: 0rem 1.25rem;
+    padding-left: 1rem;
+}
+
+.subcategorias-offcanvas{
+    padding-left: 1rem;
+}

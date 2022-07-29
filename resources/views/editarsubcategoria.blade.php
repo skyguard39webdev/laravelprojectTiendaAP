@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('editarCategoria')
+@section('editarSubCategoria')
 @if(Auth::user()->rol_id == 4)
     <form method="POST" action="{{ route('confirmarEditarSubcategoria') }}">
         @csrf

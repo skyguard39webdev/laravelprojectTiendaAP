@@ -13,13 +13,12 @@
                             {{ session()->forget('advertenciaOculto') }}
                         </div>
                     @endif
+                    {{-- imagen tab --}}
                     <div class="col-lg-4 col-sm-12">
                         <img src="{{ asset('img'. '/' . $main_producto[0]->modelo .'.jpg') }}" alt="{{ $main_producto[0]->modelo }}" width="500" height="500">
                     </div>
-                    <div class="col-lg-8 col-sm-12">
-                        <br>
-                        <br>
-                        <br>
+                    {{-- info tab --}}
+                    <div class="col-lg-4 col-sm-12 pt-6">
                         <h1>{{ $main_producto[0]->titulo }}</h1>
                         <h5>Modelo: <strong> {{ $main_producto[0]->modelo }}</strong></h5>
                         @if($main_producto[0]->marca == null)
@@ -166,20 +165,24 @@
                                 </form>
                             @endif
                         @endisset
-                        <div class="mt-6 col-4">
-                            <p id="otrosModelos"><strong> Otros modelos: </strong></p>
-                            <ul class="list-group">
-                            @foreach ($producto as $prod)
-                                {{-- @if ($prod->oculto != 1) --}}
-                                <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
-                                <li id="link{{$prod->id}}" class="list-group-item">
-                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong></a>
-                                </li>
-                                {{-- @endif --}}
-                            @endforeach
-                            </ul>
-                        </div>
                 {{-- el siguiente div cierra un div.row mas arriba --}}
+                </div>
+                {{-- otros modelos tab --}}
+                <div class="col-lg-3 col-sm-12 pt-6">
+                    <h4 id="otrosModelos" class="text-dark"> <strong>Otros modelos:  </strong></h4>
+                    <ul class="list-group">
+                    @foreach ($producto as $prod)
+                        <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
+                        <li id="link{{$prod->id}}" class="list-group-item">
+                            @if ($prod->precio == 0)
+                                <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-danger">(Agotado)</strong></a>
+                            @elseif ($prod->destacado == 1)
+                                <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}"><strong class="text-danger"> DESTACADO: </strong>{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-success">(Disponible)</strong></a>
+                            @else
+                                <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-success">(Disponible)</strong></a>@endif
+                        </li>
+                    @endforeach
+                    </ul>
                 </div>
                 <script type="text/javascript">
                     function checkLink() {
@@ -188,7 +191,7 @@
                         var contarOcultos = 0;
                         for (var p in productos) {
                             if (i <= productos.length) {
-                                console.log(i);
+                                
                                 var modeloOpcional = document.getElementById("link" + productos[i].id);
                                 var idProdLink = document.getElementById("idLink" + productos[i].id);
                                 var idProdView = document.getElementById("idProdView");
@@ -225,13 +228,10 @@
             <form method="POST" action="{{ route('carritoSaveProducto') }}">
                 @csrf
                 <div class="row">
-                    <div class="col-lg-4 col-sm-12">
+                    <div class="col-lg-4 col-sm-12" id="IMAGEN">
                         <img src="{{ asset('img'. '/' . $producto[0]->modelo .'.jpg') }}" alt="{{ $producto[0]->modelo }}" width="500" height="500">
                     </div>
-                    <div class="col-lg-8 col-sm-12">
-                        <br>
-                        <br>
-                        <br>
+                    <div class="col-lg-4 col-sm-12 pt-6" id="INFOPRODUCTO">
                         <h1>{{ $producto[0]->titulo }}</h1>
                         <h5>Modelo: <strong> {{ $producto[0]->modelo }}</strong></h5>
                         @if($producto[0]->marca == null)
@@ -379,20 +379,25 @@
                                 </form>
                             @endif
                         @endisset
-
-                        <div class="mt-6 col-4">
-                            <p id="otrosModelos"><strong> Otros modelos: </strong></p>
-                            <ul class="list-group">
-                            @foreach ($producto as $prod)
-                                @if ($prod->oculto != 1)
-                                <li id="link{{$prod->id}}" class="list-group-item">
-                                    <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
-                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong></a>
-                                </li>
+                    </div>
+                    <div class="col-lg-3 col-sm-12 pt-6" id="TABOTROSMODELOS">
+                        <h4 id="otrosModelos" class="text-dark"> <strong>Otros modelos:  </strong></h4>
+                        <ul class="list-group">
+                        @foreach ($producto as $prod)
+                            @if ($prod->oculto != 1)
+                            <input type="hidden" id="idLink{{$prod->id}}" value="{{$prod->id}}">
+                            <li id="link{{$prod->id}}" class="list-group-item">
+                                @if ($prod->precio == 0)
+                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-danger">(Agotado)</strong></a>
+                                @elseif ($prod->destacado == 1)
+                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}"><strong class="text-danger"> DESTACADO: </strong>{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-success">(Disponible)</strong></a>
+                                @else
+                                    <a  id="click{{$prod->id}}" class="underline text-sm text-dark" href="/detalle/{{ $prod->id }}/{{$prod->sobremodelo_id }}">{{$prod->titulo . ' Modelo: '}} <strong>{{$prod->modelo}}</strong> <strong class="text-success">(Disponible)</strong></a>
                                 @endif
-                            @endforeach
-                            </ul>
-                        </div>
+                            </li>
+                            @endif
+                        @endforeach
+                        </ul>
                     </div>
                 </div>
                 <script type="text/javascript">
@@ -402,7 +407,7 @@
                         var contarOcultos = 0;
                         for (var p in productos) {
                             if (i <= productos.length) {
-                                console.log(i);
+                                
                                 var modeloOpcional = document.getElementById("link" + productos[i].id);
                                 var idProdLink = document.getElementById("idLink" + productos[i].id);
                                 var idProdView = document.getElementById("idProdView");

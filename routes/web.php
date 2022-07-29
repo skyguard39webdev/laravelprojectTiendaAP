@@ -27,6 +27,10 @@ Route::post('/updateProducto', [App\Http\Controllers\ProductoController::class, 
 Route::get('/buscar', [App\Http\Controllers\ProductoController::class, 'buscarIndex'])->name('buscarIndex');
 Route::get('/resultado', [App\Http\Controllers\ProductoController::class, 'scopeBuscarProducto'])->name('buscarProducto');
 
+Route::post('/updateDestaque', [App\Http\Controllers\ProductoController::class, 'estadoDestaque'])->middleware(['auth'])->name('estadoDestaque');
+Route::get('/lista-productos-destaque-select', [App\Http\Controllers\ProductoController::class, 'destaqueSelect'])->middleware(['auth'])->name('destaqueSelect');
+Route::get('/lista-sobremodelos-destaque', [App\Http\Controllers\ProductoController::class, 'showListaDestacados'])->middleware(['auth'])->name('showListaDestacados');
+
 ////// Sobremodelo ////////
 Route::get('/nuevo-sobremodelo', [App\Http\Controllers\SobremodeloController::class, 'nuevoSobremodelo'])->middleware(['auth'])->name('nuevoSobremodelo');
 Route::post('/ingresarsobremodelo', [App\Http\Controllers\SobremodeloController::class, 'ingresarSobremodelo'])->middleware(['auth'])->name('ingresarSobremodelo');
@@ -39,6 +43,12 @@ Route::get('/editarSobremodelo', [App\Http\Controllers\SobremodeloController::cl
 Route::post('/updateSobremodelo', [App\Http\Controllers\SobremodeloController::class, 'confirmarEditarSobremodelo'])->middleware(['auth'])->name('confirmarEditarSobremodelo');
 
 // CRUD Categorias //
+Route::get('/nueva-subsubcat', [App\Http\Controllers\SubsubcategoriaController::class, 'nuevaSubsubCat'])->middleware(['auth'])->name('nuevaSubsubCat');
+Route::post('/ingresarsubsubcategoria', [App\Http\Controllers\SubsubcategoriaController::class, 'ingresarSubsubCat'])->middleware(['auth'])->name('ingresarSubsubCat');
+Route::get('/editarSubsubcategoria', [App\Http\Controllers\SubsubcategoriaController::class, 'showEditarSubsubcategoria'])->middleware(['auth'])->name('showEditarSubsubcategoria');
+Route::post('/updateSubsubcategoria', [App\Http\Controllers\SubsubcategoriaController::class, 'confirmarEditarSubsubcategoria'])->middleware(['auth'])->name('confirmarEditarSubsubcategoria');
+Route::post('/deleteSubsubcategoria', [App\Http\Controllers\SubsubcategoriaController::class, 'confirmarEliminarSubsubcategoria'])->middleware(['auth'])->name('confirmarEliminarSubsubcategoria');
+Route::get('/eliminarSubsubcategoria', [App\Http\Controllers\SubsubcategoriaController::class, 'showEliminarSubsubcategoria'])->middleware(['auth'])->name('showEliminarSubsubcategoria');
 
 Route::post('/ingresarcategoria', [App\Http\Controllers\CategoriaController::class, 'ingresarCat'])->middleware(['auth'])->name('ingresarCat');
 Route::post('/ingresarsubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'ingresarSubCat'])->middleware(['auth'])->name('ingresarSubCat');
@@ -47,6 +57,11 @@ Route::post('/updateCategoria', [App\Http\Controllers\CategoriaController::class
 Route::get('/editarSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'showEditarSubcategoria'])->middleware(['auth'])->name('showEditarSubcategoria');
 Route::post('/updateSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'confirmarEditarSubcategoria'])->middleware(['auth'])->name('confirmarEditarSubcategoria');
 
+Route::post('/deleteCategoria', [App\Http\Controllers\CategoriaController::class, 'confirmarEliminarCategoria'])->middleware(['auth'])->name('confirmarEliminarCategoria');
+Route::get('/eliminarCategoria', [App\Http\Controllers\CategoriaController::class, 'showEliminarCategoria'])->middleware(['auth'])->name('showEliminarCategoria');
+Route::post('/deleteSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'confirmarEliminarSubcategoria'])->middleware(['auth'])->name('confirmarEliminarSubcategoria');
+Route::get('/eliminarSubcategoria', [App\Http\Controllers\SubcategoriaController::class, 'showEliminarSubcategoria'])->middleware(['auth'])->name('showEliminarSubcategoria');
+
 /////// CRUD Producto /////////
 
 Route::post('/ingresarproducto', [App\Http\Controllers\ProductoController::class, 'ingresarProducto'])->middleware(['auth'])->name('ingresarProducto');
@@ -54,8 +69,11 @@ Route::get('/editarProducto/{id}', [App\Http\Controllers\ProductoController::cla
 Route::get('/eliminarProducto/{id}', [App\Http\Controllers\ProductoController::class, 'eliminarProducto'])->middleware(['auth'])->name('eliminarProducto');
 Route::post('/deleteProduct', [App\Http\Controllers\ProductoController::class, 'confirmarEliminarProducto'])->middleware(['auth'])->name('confirmarEliminarProducto');
 Route::get('/lista-productos-estado', [App\Http\Controllers\ProductoController::class, 'estadoProductoSelect'])->middleware(['auth'])->name('estadoProductoSelect');
+Route::get('/lista-productos-buscarListaSSCProductos', [App\Http\Controllers\ProductoController::class, 'buscarListaSSCProductos'])->middleware(['auth'])->name('buscarListaSSCProductos');
 Route::post('/updateEstadoP', [App\Http\Controllers\ProductoController::class, 'estadoUpdateProducto'])->middleware(['auth'])->name('estadoUpdateProducto');
+Route::post('/updateSSCP', [App\Http\Controllers\ProductoController::class, 'subsubcategriaUpdate'])->middleware(['auth'])->name('subsubcategriaUpdate');
 Route::get('/lista-productos', [App\Http\Controllers\ProductoController::class, 'showListaProductos'])->middleware(['auth'])->name('showListaProductos');
+Route::get('/lista-productos-ssc', [App\Http\Controllers\ProductoController::class, 'showCambiarSSCProductos'])->middleware(['auth'])->name('showCambiarSSCProductos');
 Route::get('/buscar-lista-productos', [App\Http\Controllers\ProductoController::class, 'buscarListaProductos'])->middleware(['auth'])->name('buscarListaProductos');
 
 Route::get('/lista-productos-precio', [App\Http\Controllers\ProductoController::class, 'showListaProductosPrecio'])->middleware(['auth'])->name('showListaProductosPrecio');
@@ -63,12 +81,6 @@ Route::get('/lista-productos-estado-precio', [App\Http\Controllers\ProductoContr
 Route::post('/updatePrecio', [App\Http\Controllers\ProductoController::class, 'precioUpdate'])->middleware(['auth'])->name('precioUpdate');
 Route::get('/buscar-lista-productos-precio', [App\Http\Controllers\ProductoController::class, 'buscarListaProductosPrecios'])->middleware(['auth'])->name('buscarListaProductosPrecios');
 Route::post('/movercrear-productotarjeta', [App\Http\Controllers\ProductoController::class, 'moverProductoTarjeta'])->middleware(['auth'])->name('moverProductoTarjeta');
-
-
-
-
-
-
 
 
 // ListaUsuario Routes //

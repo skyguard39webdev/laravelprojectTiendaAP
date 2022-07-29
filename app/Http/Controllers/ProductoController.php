@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Models\Subcategoria;
+use App\Models\Subsubcategoria;
 use App\Models\Producto;
 use App\Models\Carro;
 use App\Models\Sobremodelo;
@@ -15,18 +16,17 @@ class ProductoController extends Controller
 {
     public function cat($cat)
     {
-        // ESTO AL PARECER RECOJE LOS PRODUCTOS DE LA CATEGORIA CORRECTA SIN REPETIRSE
-        // WOOOOOOOOOOOOOOOOOOOOOOOW HOW THE FUCK IT IS WORKING, I DON'T KNOW, DON'T ASK ME
+        
         $producto = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto')
             ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
-            ->where('productos.subcategoria_id', $cat)
+            ->where('productos.subsubcategoria_id', $cat)
             ->where('productos.oculto', 0)
             ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
             ->paginate(12);
             
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')
-            ->where('subcategoria_id', $cat)
+            ->where('subsubcategoria_id', $cat)
             ->where('oculto', 0)
             ->distinct()
             ->get();
@@ -120,22 +120,25 @@ class ProductoController extends Controller
     {
         $producto = new Producto;
         $producto->marca = $request->marca;
+        $modeloUnico = Producto::where('modelo', $request->modelo)->get();
+        if(!empty($modeloUnico[0])){
+            if($modeloUnico[0]->modelo == $request->modelo) {
+                return back()->with('modeloUnique', 'El modelo ingresado ya existe.');
+            }
+        }
         $producto->modelo = $request->modelo;
         $producto->titulo = $request->titulo;
         $producto->precio = $request->precio;
         $producto->oculto = 0;
+        $producto->destacado = 0;
         if($request->precio == null) {
             return back()->with('nullPrecio', 'No ha ingresado un Precio.');
         }elseif (!is_numeric($request->precio)){
             return back()->with('nanPrecio', 'No ha ingresado un valor correcto en el campo Precio.');
         }
-        $producto->peso = $request->peso;
-        $producto->tramos = $request->tramos;
-        $producto->tramos_mts = $request->tmts;
-        $producto->pcs = $request->pcs;
-        $producto->subcategoria_id = $request->categoria;
+        $producto->subsubcategoria_id = $request->categoria;
         if($request->sobremodelo == null) {
-            return back()->with('nullSobremodelo', 'No ha seleccionado un Sobremodelo.');
+            return back()->with('nullSobremodelo', 'No ha seleccionado una tarjeta.');
         }
         $producto->sobremodelo_id = $request->sobremodelo;
         $producto->descripcion = $request->descripcion;
@@ -159,11 +162,7 @@ class ProductoController extends Controller
             return back()->with('nanPrecio', 'No ha ingresado un valor correcto en el campo Precio.');
         }
         $producto->precio = $request->precio;
-        $producto->peso = $request->peso;
-        $producto->tramos = $request->tramos;
-        $producto->tramos_mts = $request->tmts;
-        $producto->pcs = $request->pcs;
-        $producto->subcategoria_id = $request->categoria;
+        $producto->subsubcategoria_id = $request->subsubcategoria;
         if($request->sobremodelo == null) {
             return back()->with('nullSobremodelo', 'No ha seleccionado un Sobremodelo.');
         }
@@ -201,8 +200,10 @@ class ProductoController extends Controller
             ->where('productos.oculto', 0)
             ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
-            ->paginate(12);
-
+            ->paginate(12)
+            ->appends(request()->query());
+            // agregue la lina 211 para que el paginate agregue el query a la siguiente pagina
+            
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
         return view('buscar', compact('producto', 'imgModelos'));
@@ -216,7 +217,9 @@ class ProductoController extends Controller
             ->where('productos.oculto', 0)
             ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
-            ->paginate(12);
+            ->paginate(12)
+            ->appends(request()->query());
+            // agregue la lina 228 para que el paginate agregue el query a la siguiente pagina
 
         $imgModelos = Producto::select('modelo', 'sobremodelo_id', 'precio', 'oculto')->where('oculto', 0)->distinct()->get();
 
@@ -244,7 +247,7 @@ class ProductoController extends Controller
 
     public function estadoProductoSelect(Request $request)
     {
-        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 
@@ -255,25 +258,6 @@ class ProductoController extends Controller
             return redirect('/');
         }
     }
-
-    public function estadoUpdate(Request $request)
-    {
-        $checksave = FALSE;
-        $index = 0;
-        foreach ($request->all()['id'] as $rid) {
-            $producto = Producto::findOrFail($rid);
-            $producto->oculto = $request->all()['estado'][$index];
-            $checksave = $producto->save();
-            $index++;
-            
-        }
-        if ($checksave) {
-            return redirect('/lista-productos')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
-        } else {
-            App::abort(500, 'Error');
-        }
-    }
-
 
     public function estadoUpdateProducto(Request $request)
     {
@@ -293,14 +277,52 @@ class ProductoController extends Controller
         }
     }
 
+    public function subsubcategriaUpdate(Request $request)
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $producto = Producto::findOrFail($rid);
+            $producto->subsubcategoria_id = $request->all()['subsubcategoria_id'][$index];
+            $producto->subcategoria_id = $request->all()['subcategoria_id'][$index];
+            // $scid = Subsubcategoria::findOrFail($request->all()['subsubcategoria_id'][$index]); //recoje la subcategoria_id
+            // $producto->subcategoria_id = $scid->subcat_id;
+            $checksave = $producto->save();
+            $index++;
+            
+        }
+        
+        if ($checksave) {
+            return redirect('/lista-productos-ssc')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
     public function showListaProductos()
     {
-        $listaProductos = Producto::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaProductos = Producto::query()->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 
         if ( $usuarioLoggeado->rol_id == 4) {
             return view('ocultarmostrar-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function showCambiarSSCProductos()
+    {
+        $listaProductos = Producto::query()->paginate(400); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        // dd($listaProductos->all()[0]->subsubcategoria->nombre);
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('cambiarsubsubcategoriaproducto', compact('listaProductos'));
         }
         else {
             return redirect('/');
@@ -313,7 +335,7 @@ class ProductoController extends Controller
             // ->orWhere('descripcion', 'like', "%{$request->termino}%")
             // ->orWhere('marca', 'like', "%{$request->termino}%")
             ->orWhere('modelo', 'like', "%{$request->termino}%")
-            ->paginate(1000);
+            ->paginate(400);
             
         $usuarioLoggeado = Auth::user();
         
@@ -327,7 +349,7 @@ class ProductoController extends Controller
 
     public function showListaProductosPrecio()
     {
-        $listaProductos = Producto::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaProductos = Producto::query()->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 
@@ -345,12 +367,30 @@ class ProductoController extends Controller
             // ->orWhere('descripcion', 'like', "%{$request->termino}%")
             // ->orWhere('marca', 'like', "%{$request->termino}%")
             ->orWhere('modelo', 'like', "%{$request->termino}%")
-            ->paginate(1000);
+            ->paginate(400);
             
         $usuarioLoggeado = Auth::user();
         
         if ( $usuarioLoggeado->rol_id == 4) {
             return view('editarprecios-productos', compact('listaProductos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function buscarListaSSCProductos(Request $request)
+    {
+        $listaProductos = Producto::where('titulo', 'like', "%{$request->termino}%")
+            // ->orWhere('descripcion', 'like', "%{$request->termino}%")
+            // ->orWhere('marca', 'like', "%{$request->termino}%")
+            ->orWhere('modelo', 'like', "%{$request->termino}%")
+            ->paginate(400);
+            
+        $usuarioLoggeado = Auth::user();
+        
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('cambiarsubsubcategoriaproducto', compact('listaProductos'));
         }
         else {
             return redirect('/');
@@ -384,7 +424,7 @@ class ProductoController extends Controller
 
     public function estadoPrecioSelect(Request $request)
     {
-        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaProductos = Producto::query()->where('oculto', $request->estado)->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 
@@ -433,6 +473,53 @@ class ProductoController extends Controller
             }else {
                 return redirect('/detalle/'.$producto->id.'/'.$producto->sobremodelo_id)->with('exitoMover', 'Se ha movido el producto a la tarjeta seleccionada con exito.');
             }
+        }
+    }
+
+    public function estadoDestaque(Request $request)   //// funcion de guardado de destaque de items
+    {
+        $checksave = FALSE;
+        $index = 0;
+        foreach ($request->all()['id'] as $rid) {
+            $prod = Sobremodelo::findOrFail($rid);
+            $prod->destacado = $request->all()['destacado'][$index];
+            $checksave = $prod->save();
+            $index++;
+            
+        }
+        if ($checksave) {
+            return redirect('/lista-sobremodelos-destaque')->with('exitoUpdateEstado', 'Los estados han sido actualizados con exito.');
+        } else {
+            App::abort(500, 'Error');
+        }
+    }
+
+    public function destaqueSelect(Request $request) // para buscar y ordenar por un orden determinado
+    {
+        $listaSobremodelos = Sobremodelo::query()->where('destacado', $request->estado)->paginate(400); // puede ser que sean de hasta 100 filas
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-destacados', compact('listaSobremodelos'));
+            // return redirect('/lista-sobremodelos', compact('listaSobremodelos'));
+        }
+        else {
+            return redirect('/');
+        }
+    }
+
+    public function showListaDestacados()
+    {
+        $listaSobremodelos = Sobremodelo::query()->paginate(400); // con limite de 400 evitamos generar un bug del kernel de php
+
+        $usuarioLoggeado = Auth::user();
+
+        if ( $usuarioLoggeado->rol_id == 4) {
+            return view('ocultarmostrar-destacados', compact('listaSobremodelos'));
+        }
+        else {
+            return redirect('/');
         }
     }
 

@@ -54,7 +54,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        Mail::to('pbandres2019@gmail.com')->send(new NuevoRegistro($user)); //tenemos que poner el correo personal de andres pbandres2019@gmail.com
+        Mail::to('pbandres2019@gmail.com')->send(new NuevoRegistro($user));
+        // Mail::to('skyguard39@gmail.com')->send(new NuevoRegistro($user)); //tenemos que poner el correo personal de andres pbandres2019@gmail.com
 
         return redirect('/');
     }

@@ -15,11 +15,13 @@ class Producto extends Model
         'titulo',
         'precio',
         'oculto',
+        'destacado',
         'peso',
         'tramos',
         'tramos_mts',
         'pcs',
         'subcategoria_id',
+        'subsubcategoria_id',
         'sobremodelo_id',
         'descripcion',
     ];
@@ -32,6 +34,11 @@ class Producto extends Model
     public function subcategoria()
     {
         return $this->belongsTo(Subcategoria::class);
+    }
+
+    public function subsubcategoria()
+    {
+        return $this->belongsTo(Subsubcategoria::class);
     }
 
     public function sobremodelo()

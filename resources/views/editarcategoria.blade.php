@@ -40,7 +40,7 @@
             var option = select.options[select.selectedIndex];
             
             var categorias = <?php echo json_encode($categorias); ?>; //esto sirve para traer una variable de php a javascript de forma eficaz
-
+    
             if(categorias[select.selectedIndex-1] == null) {
                 nuevonombre.value = "Seleccionar una categoria de la lista"
                 nuevonombre.disabled = true;

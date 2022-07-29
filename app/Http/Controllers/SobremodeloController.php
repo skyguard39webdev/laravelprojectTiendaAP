@@ -26,11 +26,11 @@ class SobremodeloController extends Controller
         // $agregados = Sobremodelo::latest()->where('oculto', 0)->limit(4)->get();
         $agregados = Sobremodelo::select('sobremodelos.id','sobremodelos.titulo', 'sobremodelos.oculto', 'sobremodelos.created_at')
             ->join('productos', 'sobremodelos.id', '=', 'productos.sobremodelo_id')
-            ->where('productos.oculto', 0)
+            ->where('sobremodelos.destacado', 1)
             ->where('sobremodelos.oculto', 0)
             ->groupBy('sobremodelos.titulo','sobremodelos.titulo')
             ->latest()
-            ->limit(4)
+            ->limit(12)
             ->get();
 
         // $actualizados = Sobremodelo::where('oculto', 0)->orderBy('updated_at', 'desc')->limit(4)->get();
@@ -70,6 +70,7 @@ class SobremodeloController extends Controller
         $sobremodelo = new Sobremodelo;
         $sobremodelo->titulo = $request->titulo;
         $sobremodelo->oculto = 0;
+        $sobremodelo->destacado = 0;
         $checksave = $sobremodelo->save();
         
         // chequea si la base de datos realmente salva o no
@@ -86,7 +87,7 @@ class SobremodeloController extends Controller
             return back()->with('errorDeleating', 'La tarjeta asociada no ha podido ser eliminada. Aun tiene productos asociados (Sugerencia: mover los productos a otra tarjeta).');
         } else {
             Sobremodelo::where('id', $request->sobremodelo_id)->delete();
-            return back()->with('successDeleating', 'La tarjeta asociada se ha eliminado correctamente.');
+            return back()->with('successDeleating', 'La tarjeta se ha eliminado correctamente.');
         }
     }
 
@@ -99,7 +100,7 @@ class SobremodeloController extends Controller
 
     public function estadoSelect(Request $request)
     {
-        $listaSobremodelos = Sobremodelo::query()->where('oculto', $request->estado)->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaSobremodelos = Sobremodelo::query()->where('oculto', $request->estado)->paginate(400); // puede ser que sean de hasta 100 filas
 
         $usuarioLoggeado = Auth::user();
 
@@ -132,7 +133,7 @@ class SobremodeloController extends Controller
 
     public function showListaSobremodelos()
     {
-        $listaSobremodelos = Sobremodelo::query()->paginate(1000); // puede ser que sean de hasta 100 filas
+        $listaSobremodelos = Sobremodelo::query()->paginate(400); // con limite de 400 evitamos generar un bug del kernel de php
 
         $usuarioLoggeado = Auth::user();
 

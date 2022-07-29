@@ -115,8 +115,8 @@ class CarroController extends Controller
         $carro = Carro::where('user_id', $usuario->id)->get()->all();
 
         $para_nombre = $usuario->name;
-
-        $para_correo = 'pbandres2019@gmail.com'; // cambiar a correo personal de andres pbandres2019@gmail.com
+                                                    // $para_correo = 'pbandres2019@gmail.com';
+        $para_correo = 'pbandres2019@gmail.com';    // cambiar a correo personal de andres pbandres2019@gmail.com
 
 
         if(Auth::user()->rol_id == 1 || Auth::user()->rol_id == 4){

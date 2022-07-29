@@ -57,11 +57,11 @@
                 <input type="file" class="form-control" id="imagenproducto" name="imagen" value="">
             </div> --}}
             <div class="col-lg-2 col-sm-12">
-                <label for="categoriaproducto" class="form-label">Subcategoria</label>
-                <select id="categoriaproducto" class="form-select" name="categoria" required>
-                    <option selected value="{{$producto->subcategoria_id}}">{{$producto->subcategoria->nombre}}</option>
-                    @foreach($subcategorias as $sc)
-                    <option value="{{$sc->id}}">{{$sc->nombre}}</option>
+                <label for="categoriaproducto" class="form-label">Sub-subcategoria</label>
+                <select id="categoriaproducto" class="form-select" name="subsubcategoria" required>
+                    <option selected value="{{$producto->subsubcategoria_id}}">{{$producto->subsubcategoria->nombre}}</option>
+                    @foreach($subsubcategorias as $ssc)
+                    <option value="{{$ssc->id}}">{{$ssc->nombre}}</option>
                     @endforeach
                 </select>
             </div>
@@ -74,7 +74,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-1 col-sm-12">
+            {{-- <div class="col-lg-1 col-sm-12">
                 <label for="pesoproducto" class="form-label">Peso</label>
                 <input type="numeric" class="form-control" id="pesoproducto" name="peso" value="{{ $producto->peso}}">
             </div>
@@ -89,10 +89,10 @@
             <div class="col-lg-1 col-sm-12">
                 <label for="pcsproducto" class="form-label">PCs</label>
                 <input type="numeric" class="form-control" id="pcsproducto" name="pcs" value="{{ $producto->pcs}}">
-            </div>
+            </div> --}}
             <div class="col-lg-12 col-sm-12">
                 <label for="descproducto" class="form-label">Descripcion</label>
-                <textarea class="form-control" rows="1" id="descproducto" name="descripcion" value="{{ $producto->descripcion}}"></textarea>
+                <input class="form-control" rows="2" id="descproducto" name="descripcion" value="{{ $producto->descripcion }}"></input>
             </div>
             <div class="flex items-center justify-end mt-1 mr-5 pr-1 pt-3 mb-5 pb-5">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="/">
